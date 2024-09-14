@@ -8,8 +8,8 @@ const {
   white,
   yellow,
 } = require("colorette");
-//const EmojiManager = require("../helpers/emojis");
 const { writeFile } = require("node:fs/promises");
+const { version } = require("../../package.json");
 
 const dev = process.env.NODE_ENV !== "production";
 const style = dev ? yellow : blue;
@@ -23,13 +23,6 @@ class UserEvent extends Listener {
   }
 
   async run() {
-    // Fetching emojis on every startup is unnecessary
-    // So we fetch when an emoji is added / updated, upload all of the updated data to a file.
-    /*this.container.logger.debug(`Fetching application emojis...`);
-    const data = await this.container.client.application.emojis.fetch();
-    this.container.logger.info("Cached application emojis");
-    this.saveEmojis(data);*/
-
     this.printBanner();
     this.printStoreDebugInformation();
   }
@@ -56,7 +49,7 @@ class UserEvent extends Listener {
 
     console.log(
       String.raw`
-            ${line01} ${pad}${blc("1.0.0")}
+            ${line01} ${pad}${blc(version)}
             ${line02} ${pad}[${success}] Gateway
             ${line03}${dev ? ` ${pad}${blc("<")}${llc("/")}${blc(">")} ${llc("DEVELOPMENT MODE")}` : ""}
             `.trim(),

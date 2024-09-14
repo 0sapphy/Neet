@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 const client = new SapphireClient({
   logger: {
-    level: LogLevel.Debug,
+    level: LogLevel.Info,
   },
 
   shards: "auto",

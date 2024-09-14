@@ -16,6 +16,7 @@
     "@sapphire/plugin-subcommands": "^7.0.0",
     "colorette": "^2.0.20",
     "discord.js": "^14.16.1",
+    "moment": "^2.30.1",
     "mongoose": "^8.6.1"
   },
   "devDependencies": {

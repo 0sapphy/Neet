@@ -26,7 +26,7 @@ class ChannelSelectMenuInteraction extends Listener {
 
         const embed = new EmbedBuilder()
           .setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
-          .setDescription(`${getEmoji("check")} **Updated Settings**\n`)
+          .setDescription(`${getEmoji("checkmark")} **Updated Settings**\n`)
           .setColor("Blurple")
           .setTimestamp();
 
@@ -64,6 +64,42 @@ class ChannelSelectMenuInteraction extends Listener {
           embeds: [embed],
           components: [],
         });
+      }
+    } else if (interaction.isStringSelectMenu()) {
+      const { customId, values, guild, user } = interaction;
+      const value = values.at(0);
+
+      if (customId === "logchannel-disable") {
+        await interaction.deferUpdate();
+
+        const embed = new EmbedBuilder()
+          .setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
+          .setDescription(`${getEmoji("checkmark")} **Updated Settings**\n`)
+          .setColor("Blurple")
+          .setTimestamp();
+
+        if (value === "All") {
+          const update = {};
+
+          for (const V of ["onCreate", "onUpdate", "onDelete"]) {
+            Object.assign(update, { [V]: null });
+            embed.data.description += `  ${getEmoji("right_arrow")} ${V}: ${getEmoji("off")}\n`;
+          }
+
+          await Log.findOneAndUpdate({ guildId: guild.id }, update, {
+            upsert: true,
+          });
+        } else {
+          embed.data.description += `  ${getEmoji("right_arrow")} ${value}: ${value}: ${getEmoji("off")}`;
+
+          await Log.findOneAndUpdate(
+            { guildId: guild.id },
+            { [value]: null },
+            { upsert: true },
+          );
+        }
+
+        return interaction.editReply({ embeds: [embed], components: [] });
       }
     }
   }

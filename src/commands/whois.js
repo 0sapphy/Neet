@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const { Subcommand } = require("@sapphire/plugin-subcommands");
-const { getEmoji } = require("../lib/utils");
+const { getEmoji, getDate } = require("../lib/utils");
 
 class WhoisCommand extends Subcommand {
   constructor(context, options) {
@@ -55,11 +55,11 @@ class WhoisCommand extends Subcommand {
         name: interaction.user.username,
         iconURL: interaction.user.displayAvatarURL(),
       })
-      .setTitle(`${getEmoji("stats")} User Information: ${user.username}`)
+      .setTitle(`${getEmoji("member")} User Information: ${user.username}`)
       .setDescription(
         `
 - **Name**\n${getEmoji("right_arrow")} ${user.username}${user.globalName ? ` / ${user.globalName}` : ""}\n
-- **Created At**\n${getEmoji("right_arrow")} ${user.createdAt}
+- **Created At**\n${getEmoji("right_arrow")} ${getDate(user.createdAt)}
     `,
       )
       .setColor("Blurple")
