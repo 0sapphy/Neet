@@ -3,11 +3,11 @@ const { writeWarn, writeInfo } = require("./logger");
 
 /** @param {import('discord.js').Client} client */
 module.exports = async (client) => {
-  const files = await readdir("./src/commands/");
+  const files = await readdir("./src/application/commands/");
   let amount = 0;
 
   for (const file of files) {
-    const command = require(`../commands/${file}`);
+    const command = require(`../application/commands/${file}`);
 
     if (!command.data) {
       writeWarn(`Missing command #data at ${file}`, command);

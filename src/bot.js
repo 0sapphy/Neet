@@ -4,6 +4,7 @@ const { writeError } = require("./helpers/logger");
 
 const client = new Client({
   intents: ["Guilds", "GuildMembers"],
+  shards: "auto",
 });
 
 client.commands = new Collection();
@@ -18,6 +19,7 @@ process.on("uncaughtException", (error) => {
 
 const main = async () => {
   try {
+    require("./helpers/databaseHandler")();
     require("./helpers/eventHandler")(client);
     require("./helpers/commandHandler")(client);
     client.login(process.env.TOKEN);
