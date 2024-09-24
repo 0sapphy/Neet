@@ -1,6 +1,12 @@
 const { default: mongoose } = require("mongoose");
 
 const CasesSchema = new mongoose.Schema({
+  case_id: {
+    type: mongoose.SchemaTypes.UUID,
+    required: true,
+    unique: true,
+  },
+
   guild_id: {
     type: mongoose.SchemaTypes.String,
     required: true,
@@ -13,7 +19,7 @@ const CasesSchema = new mongoose.Schema({
 
   user_id: {
     type: mongoose.SchemaTypes.String,
-    required: true
+    required: true,
   },
 
   action: {
