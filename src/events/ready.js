@@ -4,5 +4,5 @@ const { writeInfo } = require("../helpers/logger");
 module.exports = async (client) => {
   writeInfo(`${client.user.username} is ready!`);
 
-  //await require("../../scripts/deploy").syncCommands(client.commands);
+  await require("../../scripts/deploy").syncCommands(client.commands);
 };
