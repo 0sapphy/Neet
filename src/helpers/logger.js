@@ -10,18 +10,27 @@ function getDate() {
  * @param {string} message
  * @param  {...any} args
  */
+function writeDebug(message, ...args) {
+  console.debug(
+    style.white(getDate()),
+    style.bold(style.black("[DEBUG]")),
+    style.yellow(message),
+
+    args.length > 0 ? inspect(args) : "",
+  );
+}
+
+/**
+ * @param {string} message
+ * @param  {...any} args
+ */
 function writeInfo(message, ...args) {
   console.info(
     style.white(getDate()),
     style.bold(style.green("[INFO]")),
     style.blue(args.length > 0 ? `${message}\n` : message),
 
-    args.length > 0
-      ? inspect(args, {
-          showHidden: false,
-          depth: 5,
-        })
-      : "",
+    args.length > 0 ? inspect(args) : "",
   );
 }
 
@@ -35,12 +44,7 @@ function writeWarn(message, ...args) {
     style.bold(style.yellow("[WARN]")),
     style.magenta(args.length > 0 ? `${message}\n` : message),
 
-    args.length > 0
-      ? inspect(args, {
-          showHidden: false,
-          depth: 5,
-        })
-      : "",
+    args.length > 0 ? inspect(args) : "",
   );
 }
 
@@ -54,10 +58,7 @@ function writeError(message, error) {
     style.bold(style.red("[ERROR]")),
     style.black(message),
 
-    inspect(error, {
-      showHidden: true,
-      depth: 5,
-    }),
+    inspect(error),
   );
 }
 
@@ -65,4 +66,5 @@ module.exports = {
   writeInfo,
   writeWarn,
   writeError,
+  writeDebug,
 };
