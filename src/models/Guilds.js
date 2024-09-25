@@ -6,10 +6,6 @@ const GuildSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-
-  settings_moderation_roles: {
-    type: mongoose.SchemaTypes.Array,
-  },
 });
 
 module.exports = mongoose.model("guilds", GuildSchema, "Guilds");
