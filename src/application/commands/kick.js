@@ -5,6 +5,7 @@ const {
 } = require("discord.js");
 const { writeError, writeInfo } = require("../../helpers/logger");
 const { Cases } = require("../../helpers/database");
+const { emoji } = require("../../helpers/utils");
 
 module.exports = {
   options: {
@@ -49,7 +50,9 @@ module.exports = {
 
       initialEmbed
         .setTitle("Member Not Found")
-        .setDescription(`[**${user.username}**]: User is not in this server.`)
+        .setDescription(
+          `${emoji("Xmark")} | [**${user.username}**]: User is not in this server.`,
+        )
         .setColor("Blurple");
 
       return interaction.reply({ embeds: [initialEmbed], ephemeral: true });
@@ -59,7 +62,7 @@ module.exports = {
       initialEmbed
         .setTitle("Not Enough Permissions")
         .setDescription(
-          `**I** don't have enough permissions to kick this member.\n\n- Member might have a higher role than me.\n- Check if i have the correct permissions to kick members.${member.id === member.client.user.id ? "\n- **I cannot kick myself.**" : ""}`,
+          `${emoji("Xmark")} | **I** don't have enough permissions to kick this member.\n\n- Member might have a higher role than me.\n- Check if i have the correct permissions to kick members.${member.id === member.client.user.id ? "\n- **I cannot kick myself.**" : ""}`,
         )
         .setColor("Orange");
 
@@ -97,7 +100,7 @@ module.exports = {
     } finally {
       const finalResponseEmbed = new EmbedBuilder()
         .setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
-        .setDescription(`:white_check_mark: | Kicked ${member} | ${reason}`)
+        .setDescription(`${emoji("Checkmark")} | Kicked ${member} | ${reason}`)
         .setFooter({ text: `${member.id}` })
         .setColor("Blurple")
         .setTimestamp();
