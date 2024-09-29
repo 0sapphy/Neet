@@ -1,4 +1,8 @@
-const { EmbedBuilder } = require("discord.js");
+const {
+  EmbedBuilder,
+  ActionRowBuilder,
+  RoleSelectMenuBuilder,
+} = require("discord.js");
 const { createOgetData } = require("../../../helpers/database");
 const Guilds = require("../../../models/Guilds");
 const { emoji } = require("../../../helpers/utils");
@@ -35,6 +39,21 @@ module.exports = async (interaction) => {
     : [];
   await res.data.save();
 
+  const ImuneRoleSelectMenu = new RoleSelectMenuBuilder()
+    .setPlaceholder("Select a imune role!")
+    .setCustomId("automod-invitelink")
+    .setMaxValues(5);
+
+  res.data.automod_links_invite.imune_roles
+    ? ImuneRoleSelectMenu.addDefaultRoles([
+        res.data.automod_links_invite.imune_roles,
+      ])
+    : null;
+
+  const ImuneRoleSelectRow = new ActionRowBuilder().addComponents(
+    ImuneRoleSelectMenu,
+  );
+
   embed
     .setTitle(`${emoji("Checkmark")} Saved Changes.`)
     .setDescription(
@@ -49,5 +68,8 @@ module.exports = async (interaction) => {
       .join(", ")}`;
   }
 
-  return interaction.editReply({ embeds: [embed] });
+  return interaction.editReply({
+    embeds: [embed],
+    components: [ImuneRoleSelectRow],
+  });
 };

@@ -15,8 +15,16 @@ async function createOgetData(model, _data) {
   let data;
   let error = false;
 
-  data = await model.findOne(_data).catch((error = true));
-  if (!data) data = await model.create(_data).catch((error = true));
+  data = await model.findOne(_data).catch((e) => {
+    console.error(e);
+    error = true;
+  });
+
+  if (!data)
+    data = await model.create(_data).catch((e) => {
+      console.error(e);
+      error = true;
+    });
 
   return {
     data,

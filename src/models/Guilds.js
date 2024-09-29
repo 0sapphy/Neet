@@ -13,9 +13,19 @@ const GuildSchema = new mongoose.Schema({
       default: false,
     },
 
+    action: {
+      type: mongoose.SchemaTypes.String,
+      default: "warn",
+    },
+
+    imune_roles: {
+      type: [mongoose.SchemaTypes.String],
+      default: null,
+    },
+
     whitelist: {
       type: [mongoose.SchemaTypes.String],
-      default: [],
+      default: null,
     },
   },
 });

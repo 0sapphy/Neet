@@ -3,7 +3,7 @@ const { Client, Collection } = require("discord.js");
 const { writeError } = require("./helpers/logger");
 
 const client = new Client({
-  intents: ["Guilds", "GuildMembers"],
+  intents: ["Guilds", "GuildMembers", "GuildMessages", "MessageContent"],
   shards: "auto",
 });
 
