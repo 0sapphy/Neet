@@ -7,8 +7,26 @@ const GuildSchema = new mongoose.Schema({
     unique: true,
   },
 
-  settings_moderation_roles: {
-    type: mongoose.SchemaTypes.Array,
+  automod_links_invite: {
+    enabled: {
+      type: mongoose.SchemaTypes.String,
+      default: false,
+    },
+
+    action: {
+      type: mongoose.SchemaTypes.String,
+      default: "warn",
+    },
+
+    imune_roles: {
+      type: [mongoose.SchemaTypes.String],
+      default: null,
+    },
+
+    whitelist: {
+      type: [mongoose.SchemaTypes.String],
+      default: null,
+    },
   },
 });
 

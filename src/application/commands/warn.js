@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const { writeError } = require("../../helpers/logger");
 const { Cases } = require("../../helpers/database");
+const { emoji } = require("../../helpers/utils");
 
 module.exports = {
   options: {
@@ -48,7 +49,9 @@ module.exports = {
 
       embed
         .setTitle("Member Not Found")
-        .setDescription(`**[${user.username}]** User is not in this server.`)
+        .setDescription(
+          `${emoji("Xmark")} | **[${user.username}]** User is not in this server.`,
+        )
         .setColor("Orange");
 
       return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -56,8 +59,7 @@ module.exports = {
 
     if (member.id === Iuser.id) {
       embed
-        .setTitle("Nah-Uh")
-        .setDescription("You cannot warn yourself.")
+        .setDescription(`${emoji("Xmark")} | You cannot warn yourself.`)
         .setColor("Blurple");
 
       return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -65,8 +67,7 @@ module.exports = {
 
     if (member.id === interaction.client.user.id) {
       embed
-        .setTitle("Pls!")
-        .setDescription("I will not warn myself 👍")
+        .setDescription(`${emoji("Xmark")} | I will not warn myself`)
         .setColor("Blurple");
 
       return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -95,7 +96,7 @@ module.exports = {
     } finally {
       const FinalResponseEmbed = new EmbedBuilder()
         .setAuthor({ name: Iuser.username, iconURL: Iuser.displayAvatarURL() })
-        .setDescription(`:white_check_mark: | Warned ${member} | ${reason}`)
+        .setDescription(`${emoji("Checkmark")} | Warned ${member} | ${reason}`)
         .setColor("Blurple")
         .setTimestamp();
 

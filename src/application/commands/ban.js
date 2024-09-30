@@ -5,6 +5,7 @@ const {
 } = require("discord.js");
 const { writeError } = require("../../helpers/logger");
 const { Cases } = require("../../helpers/database");
+const { emoji } = require("../../helpers/utils");
 
 module.exports = {
   options: {
@@ -53,7 +54,7 @@ module.exports = {
         initialEmbed
           .setTitle("Not Enough Permissions")
           .setDescription(
-            `**I** don't have enough permissions to ban this member.\n\n- Member might have a higher role than me.\n- Check if i have the correct permissions to ban members.${target.id === target.client.user.id ? "\n- **I can't ban myself.**" : ""}`,
+            `${emoji("Xmark")} | **I** don't have enough permissions to ban this member.\n\n- Member might have a higher role than me.\n- Check if i have the correct permissions to ban members.${target.id === target.client.user.id ? "\n- **I can't ban myself.**" : ""}`,
           )
           .setColor("Orange");
 
@@ -107,10 +108,12 @@ module.exports = {
       }
 
       if (!errors.success_ban) {
-        finalResponseEmbed.setDescription(`:x: | Failed to ban ${target}`);
+        finalResponseEmbed.setDescription(
+          `${emoji("Xmark")} | Failed to ban ${target}`,
+        );
       } else {
         finalResponseEmbed.setDescription(
-          `:white_check_mark: | Banned ${target} | ${reason}`,
+          `${emoji("Checkmark")} | Banned ${target} | ${reason}`,
         );
       }
 

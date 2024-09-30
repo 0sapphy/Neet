@@ -1,4 +1,5 @@
 const { EmbedBuilder, bold } = require("discord.js");
+const { emoji } = require("../helpers/utils");
 
 /** @param {import('discord.js').ChatInputCommandInteraction} interaction */
 module.exports = (interaction) => {
@@ -24,7 +25,7 @@ module.exports = (interaction) => {
         embed
           .setTitle("Not Enough Permissions")
           .setDescription(
-            `**You** don't have enough permissions to use this command.\n\n- You need these permissions: ${mapped_permissions}`,
+            `${emoji("Xmark")} | **You** don't have enough permissions to use this command.\n\n- You need these permissions: ${mapped_permissions}`,
           )
           .setColor("Orange");
 
@@ -43,7 +44,7 @@ module.exports = (interaction) => {
         embed
           .setTitle("Not Enough Permissions")
           .setDescription(
-            `**I** don't have enough permissions to execute this command.\n\n- I need these permissions: ${mapped_permissions}`,
+            `${emoji("Xmark")} | **I** don't have enough permissions to execute this command.\n\n- I need these permissions: ${mapped_permissions}`,
           )
           .setColor("Orange");
 
