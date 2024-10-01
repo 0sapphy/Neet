@@ -11,6 +11,12 @@ module.exports = {
     .setDescription("Automoderation commands.")
     .setContexts([InteractionContextType.Guild])
 
+    .addSubcommand((command) => {
+      return command
+        .setName("settings")
+        .setDescription("View all AutoModeration settings.");
+    })
+
     .addSubcommandGroup((command) => {
       return command
         .setName("links")
