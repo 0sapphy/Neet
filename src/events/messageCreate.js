@@ -18,10 +18,9 @@ module.exports = async (message) => {
  */
 async function moderateInviteLink(message) {
   const { member, guild } = message;
-  //if (member.permissions.has('ManageGuild')) return;
+  if (member.permissions.has("ManageGuild")) return;
 
   const guild_settings = await createOgetData(Guilds, { guildId: guild.id });
-
   if (guild_settings.error || !guild_settings.data.automod_links_invite.enabled)
     return;
 
