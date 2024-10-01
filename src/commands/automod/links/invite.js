@@ -21,6 +21,7 @@ module.exports = async (interaction) => {
 
   if (!enabled) {
     res.data.automod_links_invite.enabled = false;
+    res.data.automod_links_invite.whitelist = null;
     await res.data.save();
 
     embed
@@ -45,9 +46,9 @@ module.exports = async (interaction) => {
     .setMaxValues(5);
 
   res.data.automod_links_invite.imune_roles
-    ? ImuneRoleSelectMenu.addDefaultRoles([
+    ? ImuneRoleSelectMenu.addDefaultRoles(
         res.data.automod_links_invite.imune_roles,
-      ])
+      )
     : null;
 
   const ImuneRoleSelectRow = new ActionRowBuilder().addComponents(
@@ -57,7 +58,7 @@ module.exports = async (interaction) => {
   embed
     .setTitle(`${emoji("Checkmark")} Saved Changes.`)
     .setDescription(
-      `${emoji("Toggle_on")} | Enabled invite link automoderation`,
+      `${emoji("Toggle_on")} | Enabled invite link Auto-Moderation`,
     )
     .setColor("Blurple");
 
