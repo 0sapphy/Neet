@@ -1,5 +1,6 @@
 const emojis = require("../../scripts/dev/emojis.json");
 const { formatEmoji } = require("discord.js");
+const { third_party_invite_sources } = require("../../scripts/dev/discord");
 
 /**
  * @param {keyof emojis} name
@@ -17,14 +18,32 @@ function checkInviteLink(content) {
   const discord_invite_regexp =
     /(?:^|\b)discord(?:(?:app)?\.com\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})(?:$|\b)/gi;
 
-  if (!content.match(discord_invite_regexp)) {
-    return { found: false };
+  const match = content.match(discord_invite_regexp);
+
+  // if no matches found using the above RegExp, check for third party links.
+  if (!match) {
+    for (const source of third_party_invite_sources) {
+      const thirdparty_match = content.match(source.regexp);
+
+      // if match, return.
+      if (thirdparty_match) {
+        return {
+          found: true,
+          matches: thirdparty_match,
+          codes: getInviteLinkCodes(thirdparty_match),
+        };
+      }
+    }
+
+    return {
+      found: false,
+    };
   }
 
   return {
     found: true,
-    matches: content.match(discord_invite_regexp),
-    codes: getInviteLinkCodes(content.match(discord_invite_regexp)),
+    matches: match,
+    codes: getInviteLinkCodes(match),
   };
 }
 
