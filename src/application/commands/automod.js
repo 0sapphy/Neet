@@ -8,37 +8,23 @@ module.exports = {
 
   data: new SlashCommandBuilder()
     .setName("automod")
-    .setDescription("Automoderation commands.")
+    .setDescription("Auto-Moderation Commands")
     .setContexts([InteractionContextType.Guild])
-
-    .addSubcommand((command) => {
-      return command
-        .setName("settings")
-        .setDescription("View all AutoModeration settings.");
-    })
 
     .addSubcommandGroup((command) => {
       return command
         .setName("links")
-        .setDescription("Automod certain links.")
+        .setDescription("Auto-Moderate Links.")
 
         .addSubcommand((sub) => {
           return sub
             .setName("invite")
-            .setDescription("Disable the use of invites links.")
-
+            .setDescription("Auto-Moderate Invite Links.")
             .addBooleanOption((option) => {
               return option
                 .setName("enabled")
-                .setDescription("Enable/Disable this module.")
+                .setDescription("Enable / Disable Invite Link Auto-Moderation.")
                 .setRequired(true);
-            })
-
-            .addStringOption((option) => {
-              return option
-                .setName("white_list")
-                .setDescription('Invite code / vanity separate by "|"')
-                .setRequired(false);
             });
         });
     }),
