@@ -2,6 +2,9 @@ const {
   EmbedBuilder,
   ActionRowBuilder,
   RoleSelectMenuBuilder,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } = require("discord.js");
 const { createOgetData } = require("../../../helpers/database");
 const Guilds = require("../../../models/Guilds");
@@ -13,7 +16,6 @@ module.exports = async (interaction) => {
   await interaction.deferReply();
 
   const enabled = options.getBoolean("enabled", true);
-  const whitelist = options.getString("white_list");
   const res = await createOgetData(Guilds, { guildId: guild.id });
   const embed = new EmbedBuilder()
     .setAuthor({ name: Iuser.username, iconURL: Iuser.displayAvatarURL() })
@@ -25,9 +27,9 @@ module.exports = async (interaction) => {
     await res.data.save();
 
     embed
-      .setTitle(`${emoji("Checkmark")} Saved Changes.`)
+      .setTitle(`Saved Changes`)
       .setDescription(
-        `${emoji("Toggle_OFF")} | Disabled invite link automoderation.`,
+        `${emoji("Toggle_OFF")} | Disabled invite link Auto-Moderation.`,
       )
       .setColor("Blurple");
 
@@ -35,9 +37,6 @@ module.exports = async (interaction) => {
   }
 
   res.data.automod_links_invite.enabled = true;
-  res.data.automod_links_invite.whitelist = whitelist
-    ? whitelist.split("|")
-    : [];
   await res.data.save();
 
   const ImuneRoleSelectMenu = new RoleSelectMenuBuilder()
@@ -55,19 +54,31 @@ module.exports = async (interaction) => {
     ImuneRoleSelectMenu,
   );
 
+  const WhitelistModal = new ModalBuilder()
+    .setCustomId("automod-invites_wl")
+    .setTitle("Auto-Moderation Invites Whitelist");
+
+  const WhitelistTextInput = new TextInputBuilder()
+    .setCustomId("automod-invites_wl,ls")
+    .setLabel("Whitelist")
+    .setStyle(TextInputStyle.Short);
+
+  res.data.automod_links_invite.whitelist
+    ? WhitelistTextInput.setValue(
+        res.data.automod_links_invite.whitelist.map((i) => i).join(", "),
+      )
+    : null;
+
+  const WhitelistRow = new ActionRowBuilder().addComponents(
+    WhitelistModal.addComponents(WhitelistTextInput),
+  );
+
   embed
-    .setTitle(`${emoji("Checkmark")} Saved Changes.`)
+    .setTitle(`Saved Changes`)
     .setDescription(
       `${emoji("Toggle_on")} | Enabled invite link Auto-Moderation`,
     )
     .setColor("Blurple");
-
-  if (whitelist) {
-    embed.data.description += `\n\n- Whitelist: ${whitelist
-      .split("|")
-      .map((i) => i)
-      .join(", ")}`;
-  }
 
   return interaction.editReply({
     embeds: [embed],
