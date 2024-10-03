@@ -2,9 +2,8 @@ const {
   EmbedBuilder,
   ActionRowBuilder,
   RoleSelectMenuBuilder,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const { createOgetData } = require("../../../helpers/database");
 const Guilds = require("../../../models/Guilds");
@@ -54,23 +53,11 @@ module.exports = async (interaction) => {
     ImuneRoleSelectMenu,
   );
 
-  const WhitelistModal = new ModalBuilder()
-    .setCustomId("automod-invites_wl")
-    .setTitle("Auto-Moderation Invites Whitelist");
-
-  const WhitelistTextInput = new TextInputBuilder()
-    .setCustomId("automod-invites_wl,ls")
-    .setLabel("Whitelist")
-    .setStyle(TextInputStyle.Short);
-
-  res.data.automod_links_invite.whitelist
-    ? WhitelistTextInput.setValue(
-        res.data.automod_links_invite.whitelist.map((i) => i).join(", "),
-      )
-    : null;
-
   const WhitelistRow = new ActionRowBuilder().addComponents(
-    WhitelistModal.addComponents(WhitelistTextInput),
+    new ButtonBuilder()
+      .setCustomId("automod-whitelist")
+      .setLabel("Whitelist")
+      .setStyle(ButtonStyle.Primary),
   );
 
   embed
@@ -82,6 +69,6 @@ module.exports = async (interaction) => {
 
   return interaction.editReply({
     embeds: [embed],
-    components: [ImuneRoleSelectRow],
+    components: [ImuneRoleSelectRow, WhitelistRow],
   });
 };
