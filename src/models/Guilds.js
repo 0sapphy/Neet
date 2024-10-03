@@ -9,7 +9,7 @@ const GuildSchema = new mongoose.Schema({
 
   automod_links_invite: {
     enabled: {
-      type: mongoose.SchemaTypes.String,
+      type: mongoose.SchemaTypes.Boolean,
       default: false,
     },
 

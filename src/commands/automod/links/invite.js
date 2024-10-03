@@ -2,6 +2,8 @@ const {
   EmbedBuilder,
   ActionRowBuilder,
   RoleSelectMenuBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const { createOgetData } = require("../../../helpers/database");
 const Guilds = require("../../../models/Guilds");
@@ -13,7 +15,6 @@ module.exports = async (interaction) => {
   await interaction.deferReply();
 
   const enabled = options.getBoolean("enabled", true);
-  const whitelist = options.getString("white_list");
   const res = await createOgetData(Guilds, { guildId: guild.id });
   const embed = new EmbedBuilder()
     .setAuthor({ name: Iuser.username, iconURL: Iuser.displayAvatarURL() })
@@ -21,12 +22,13 @@ module.exports = async (interaction) => {
 
   if (!enabled) {
     res.data.automod_links_invite.enabled = false;
+    res.data.automod_links_invite.whitelist = null;
     await res.data.save();
 
     embed
-      .setTitle(`${emoji("Checkmark")} Saved Changes.`)
+      .setTitle(`Saved Changes`)
       .setDescription(
-        `${emoji("Toggle_OFF")} | Disabled invite link automoderation.`,
+        `${emoji("Toggle_OFF")} | Disabled invite link Auto-Moderation.`,
       )
       .setColor("Blurple");
 
@@ -34,9 +36,6 @@ module.exports = async (interaction) => {
   }
 
   res.data.automod_links_invite.enabled = true;
-  res.data.automod_links_invite.whitelist = whitelist
-    ? whitelist.split("|")
-    : [];
   await res.data.save();
 
   const ImuneRoleSelectMenu = new RoleSelectMenuBuilder()
@@ -45,31 +44,31 @@ module.exports = async (interaction) => {
     .setMaxValues(5);
 
   res.data.automod_links_invite.imune_roles
-    ? ImuneRoleSelectMenu.addDefaultRoles([
+    ? ImuneRoleSelectMenu.addDefaultRoles(
         res.data.automod_links_invite.imune_roles,
-      ])
+      )
     : null;
 
   const ImuneRoleSelectRow = new ActionRowBuilder().addComponents(
     ImuneRoleSelectMenu,
   );
 
+  const WhitelistRow = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId("automod-whitelist")
+      .setLabel("Whitelist")
+      .setStyle(ButtonStyle.Primary),
+  );
+
   embed
-    .setTitle(`${emoji("Checkmark")} Saved Changes.`)
+    .setTitle(`Saved Changes`)
     .setDescription(
-      `${emoji("Toggle_on")} | Enabled invite link automoderation`,
+      `${emoji("Toggle_on")} | Enabled invite link Auto-Moderation`,
     )
     .setColor("Blurple");
 
-  if (whitelist) {
-    embed.data.description += `\n\n- Whitelist: ${whitelist
-      .split("|")
-      .map((i) => i)
-      .join(", ")}`;
-  }
-
   return interaction.editReply({
     embeds: [embed],
-    components: [ImuneRoleSelectRow],
+    components: [ImuneRoleSelectRow, WhitelistRow],
   });
 };
