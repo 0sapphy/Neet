@@ -7,7 +7,7 @@ import {
   PermissionsString,
   InteractionContextType,
 } from "discord.js";
-import { CommandMode } from "./enum";
+import { CommandMode, CommandRunType } from "./enum";
 
 // Event Types.
 
@@ -46,6 +46,7 @@ export interface INeetCommandData {
 export interface INeetCommand {
   data: IRawAPICommandData;
   handler?: INeetCommandBuilder;
+  run?: any;
 }
 
 export interface INeetCommandBuilder {
@@ -60,6 +61,7 @@ export interface INeetCommandBuilder {
   };
 
   mode?: CommandMode;
+  run_type?: CommandRunType;
 }
 
 export interface INeetCommandBuilderOptions {

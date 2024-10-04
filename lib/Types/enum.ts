@@ -6,3 +6,8 @@ export enum CommandMode {
   MAINTENANCE_STAGE = 0,
   UNRECORDED = 90,
 }
+
+export enum CommandRunType {
+  THIS = "TF",
+  HANDLE = "HF",
+}
