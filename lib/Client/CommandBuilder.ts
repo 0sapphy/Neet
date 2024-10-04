@@ -68,7 +68,6 @@ export class NeetCommandBuilder {
     >
   ) {
     const normalized = normalizeArray(input);
-
     const result = normalized
       .map((builder) =>
         //@ts-ignore
@@ -77,7 +76,6 @@ export class NeetCommandBuilder {
       .at(0);
 
     this.handler ??= {};
-
     //@ts-ignore
     this.handler = result.handler;
 
