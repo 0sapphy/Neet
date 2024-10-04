@@ -1,4 +1,4 @@
-process.loadEnvFile("../.env");
+process.loadEnvFile(".env");
 
 (async () => {
   console.info("[NEET]: Loading...");
