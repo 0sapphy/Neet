@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
 const CasesSchema = new mongoose.Schema({
   case_id: {
@@ -45,4 +45,4 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("users", UserSchema, "Users");
+export const Users = mongoose.model("users", UserSchema, "Users");

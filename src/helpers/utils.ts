@@ -1,25 +1,18 @@
-const emojis = require("../../scripts/dev/emojis.json");
+import emojis from "../../scripts/dev/emojis.json";
 const { formatEmoji } = require("discord.js");
-const { third_party_invite_sources } = require("../../scripts/dev/discord");
+//const { third_party_invite_sources } = require("../../scripts/dev/discord");
 
-/**
- * @param {keyof emojis} name
- */
-function emoji(name, raw = false) {
+export function emoji(name: keyof typeof emojis, raw = false): string {
   const emoji = emojis[name];
   return raw ? emoji : formatEmoji(emoji, emoji.animated);
 }
 
-/**
- * Check if a string contains a invite link.
- * @param {string} content
- */
-function checkInviteLink(content) {
-  const discord_invite_regexp =
+export function checkInviteLink(content: string) {
+  /*const discord_invite_regexp =
     /(?:^|\b)discord(?:(?:app)?\.com\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})(?:$|\b)/gi;
 
   const match = content.match(discord_invite_regexp);
-
+ 
   // if no matches found using the above RegExp, check for third party links.
   if (!match) {
     for (const source of third_party_invite_sources) {
@@ -44,13 +37,13 @@ function checkInviteLink(content) {
     found: true,
     matches: match,
     codes: getInviteLinkCodes(match),
-  };
+  };*/
 }
 
 /**
  * @param {string} links
  */
-function getInviteLinkCodes(links) {
+export function getInviteLinkCodes(links: string[]) {
   const codes = [];
 
   for (const link of links) {
@@ -59,8 +52,3 @@ function getInviteLinkCodes(links) {
 
   return codes;
 }
-
-module.exports = {
-  emoji,
-  checkInviteLink,
-};

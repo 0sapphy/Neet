@@ -1,16 +1,12 @@
-const { inspect } = require("node:util");
-const moment = require("moment");
-const style = require("colorette");
+import { inspect } from "node:util";
+import moment from "moment";
+import style from "chalk";
 
 function getDate() {
   return moment().utcOffset(+5).format("DD/MM/YYYY hh:mm");
 }
 
-/**
- * @param {string} message
- * @param  {...any} args
- */
-function writeDebug(message, ...args) {
+export function writeDebug(message: string, ...args: unknown[]) {
   console.debug(
     style.white(getDate()),
     style.bold(style.black("[DEBUG]")),
@@ -20,11 +16,7 @@ function writeDebug(message, ...args) {
   );
 }
 
-/**
- * @param {string} message
- * @param  {...any} args
- */
-function writeInfo(message, ...args) {
+export function writeInfo(message: string, ...args: unknown[]) {
   console.info(
     style.white(getDate()),
     style.bold(style.green("[INFO]")),
@@ -34,11 +26,7 @@ function writeInfo(message, ...args) {
   );
 }
 
-/**
- * @param {string} message
- * @param  {...any} args
- */
-function writeWarn(message, ...args) {
+export function writeWarn(message: string, ...args: unknown[]) {
   console.warn(
     style.white(getDate()),
     style.bold(style.yellow("[WARN]")),
@@ -48,11 +36,7 @@ function writeWarn(message, ...args) {
   );
 }
 
-/**
- * @param {string} message
- * @param {Error|any} error
- */
-function writeError(message, error) {
+export function writeError(message: string, error: Error | any) {
   console.error(
     style.white(getDate()),
     style.bold(style.red("[ERROR]")),
@@ -61,10 +45,3 @@ function writeError(message, error) {
     inspect(error),
   );
 }
-
-module.exports = {
-  writeInfo,
-  writeWarn,
-  writeError,
-  writeDebug,
-};

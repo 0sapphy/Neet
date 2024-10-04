@@ -1,15 +1,15 @@
-const { default: mongoose } = require("mongoose");
-const { writeInfo, writeError } = require("./logger");
+import mongoose from "mongoose";
+import { writeInfo, writeError } from "./logger";
 
-module.exports = () => {
+export function Database() {
   writeInfo("Connecting to MongoDB...");
 
   try {
     mongoose
       .connect(process.env.DATABASE)
       .then(() => writeInfo("Connected to MongoDB."))
-      .catch((_r) => writeError("Error connecting to MongoDB", _r));
+      .catch((_r: Error) => writeError("Error connecting to MongoDB", _r));
   } catch (error) {
     writeError("MongoDB Error", error);
   }
-};
+}
