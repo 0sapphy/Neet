@@ -10,6 +10,7 @@ export async function Command(client: Neet) {
 
   for (const file of files) {
     const rmts = file.replace(".ts", "");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const command_file = require(`../application/commands/${rmts}`);
     const command: INeetCommand = command_file.default;
 

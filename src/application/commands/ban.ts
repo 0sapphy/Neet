@@ -1,8 +1,13 @@
-import { ApplicationCommandOptionType } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  ChatInputCommandInteraction,
+} from "discord.js";
 import { NeetCommandBuilder } from "../../../lib";
 import { CommandMode, CommandRunType } from "../../../lib/Types/enum";
 
-export function run() {}
+export function run(interaction: ChatInputCommandInteraction) {
+  interaction.reply("Hi");
+}
 
 export default new NeetCommandBuilder({
   name: "ban",
