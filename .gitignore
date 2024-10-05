@@ -1,4 +1,5 @@
 .ignore
+__test.ts
 
 # Logs
 logs
