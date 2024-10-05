@@ -1,11 +1,10 @@
 import {
-  APIApplicationCommand,
   APIApplicationCommandOption,
   ApplicationCommandType,
   ClientEvents,
-  PermissionsBitField,
   PermissionsString,
   InteractionContextType,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { CommandMode, CommandRunType } from "./enum";
 
@@ -45,8 +44,8 @@ export interface INeetCommandData {
 
 export interface INeetCommand {
   data: IRawAPICommandData;
-  handler?: INeetCommandBuilder;
-  run?: any;
+  handler: INeetCommandBuilder;
+  run?: (interaction: ChatInputCommandInteraction) => void;
 }
 
 export interface INeetCommandBuilder {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   JSONEncodable,
   RestOrArray,
@@ -70,13 +72,13 @@ export class NeetCommandBuilder {
     const normalized = normalizeArray(input);
     const result = normalized
       .map((builder) =>
-        //@ts-ignore
+        //@ts-expect-error
         resolveBuilder(builder, NeetCommandOptionBuilder),
       )
       .at(0);
 
     this.handler ??= {};
-    //@ts-ignore
+    //@ts-expect-error
     this.handler = result.handler;
 
     return this;

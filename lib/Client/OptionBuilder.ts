@@ -12,28 +12,21 @@ export class NeetCommandOptionBuilder {
   }
 
   setMode(mode: CommandMode) {
-    this.handler ??= {};
     this.handler.mode = mode;
-
     return this;
   }
 
   setRunType(type: CommandRunType) {
-    this.handler ??= {};
     this.handler.run_type = type;
-
     return this;
   }
 
   setUserPermissions(permissions: PermissionsString[]) {
-    this.handler ??= {};
     this.handler.user_permissions = { required: permissions };
-
     return this;
   }
 
   setClientPermissions(permissions: PermissionsString[]) {
-    this.handler ??= {};
     this.handler.client_permissions = { required: permissions };
     return this;
   }
