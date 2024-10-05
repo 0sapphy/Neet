@@ -1,10 +1,13 @@
 import emojis from "../../scripts/dev/emojis.json";
-const { formatEmoji } = require("discord.js");
+import { formatEmoji } from "discord.js";
 //const { third_party_invite_sources } = require("../../scripts/dev/discord");
 
-export function emoji(name: keyof typeof emojis, raw = false): string {
+export function emoji(
+  name: keyof typeof emojis,
+  raw = false,
+): string | typeof emoji {
   const emoji = emojis[name];
-  return raw ? emoji : formatEmoji(emoji, emoji.animated);
+  return raw ? emoji : formatEmoji(emoji.id, emoji.animated);
 }
 
 export function checkInviteLink(content: string) {
