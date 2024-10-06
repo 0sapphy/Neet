@@ -1,21 +1,22 @@
 {
-  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
-  "editor.formatOnType": false,
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file",
-  "files.autoSave": "onFocusChange",
-  "vs-code-prettier-eslint.prettierLast": true,
+    // Editor appearance.
+    "workbench.editor.showTabs": "default",
+    "breadcrumbs.enabled": false,
+    "explorer.decorations.badges": false,
+    "workbench.activityBar.location": "hidden",
+    "workbench.colorTheme": "Sublime Material Theme - Dark",
+    "workbench.statusBar.visible": false,
+    "outline.problems.enabled": false,
+    "editor.minimap.enabled": false,
 
-  "editor.fontSize": 18,
+    // Terminal appearance.
+    "terminal.integrated.fontWeight": "bold",
+    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.tabs.defaultColor": "terminal.ansiRed",
+    "terminal.integrated.cursorStyle": "underline",
 
-  "terminal.integrated.fontSize": 18,
-  "terminal.integrated.smoothScrolling": true,
-  "terminal.integrated.cursorStyle": "underline",
-  "terminal.integrated.cursorBlinking": true,
-  "terminal.integrated.cursorWidth": 5,
-  "terminal.integrated.drawBoldTextInBrightColors": true,
-  "terminal.integrated.stickyScroll.enabled": true,
-  "terminal.integrated.suggest.enabled": true,
-  "terminal.integrated.tabs.showActiveTerminal": "always"
+    // Formatting
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+    "editor.formatOnSave": true,
+    "javascript.format.semicolons": "ignore"
 }
