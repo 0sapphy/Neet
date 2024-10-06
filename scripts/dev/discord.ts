@@ -1,5 +1,8 @@
-module.exports = {
-  third_party_invite_sources: [
+export default {
+  official:
+    /(?:^|\b)discord(?:(?:app)?\.com\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})(?:$|\b)/gi,
+
+  sources: [
     {
       location: "discordservers.com",
       redirect: "https://discordservers.com/server",
