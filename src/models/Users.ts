@@ -46,3 +46,23 @@ const UserSchema = new mongoose.Schema({
 });
 
 export const Users = mongoose.model("users", UserSchema, "Users");
+
+export interface MICase {
+  case_id: string;
+  guild_id: string;
+  moderator_id: string;
+  user_id: string;
+  action: MICaseAction;
+  reason: string;
+}
+
+export interface MIUser {
+  userId: string;
+  cases: MICase[];
+}
+
+export enum MICaseAction {
+  ban = "ban",
+  kick = "kick",
+  warn = "warn",
+}

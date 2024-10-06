@@ -1,4 +1,5 @@
-const { default: mongoose } = require("mongoose");
+
+import mongoose from "mongoose"
 
 const GuildSchema = new mongoose.Schema({
   guildId: {
@@ -30,4 +31,4 @@ const GuildSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("guilds", GuildSchema, "Guilds");
+export const Guilds = mongoose.model("guilds", GuildSchema, "Guilds");
