@@ -4,5 +4,6 @@ declare namespace NodeJS {
     TOKEN: string;
     CLIENT_ID: string;
     GUILD_ID: string;
+    ENV: string;
   }
 }
