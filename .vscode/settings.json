@@ -1,22 +1,72 @@
 {
-    // Editor appearance.
-    "workbench.editor.showTabs": "default",
-    "breadcrumbs.enabled": false,
-    "explorer.decorations.badges": false,
-    "workbench.activityBar.location": "hidden",
-    "workbench.colorTheme": "Sublime Material Theme - Dark",
-    "workbench.statusBar.visible": false,
-    "outline.problems.enabled": false,
-    "editor.minimap.enabled": false,
+  // Editor appearance.
+  "workbench.editor.showTabs": "multiple",
+  "breadcrumbs.enabled": false,
+  "explorer.decorations.badges": false,
+  "workbench.activityBar.location": "default",
+  "workbench.colorTheme": "GitHub Dark",
+  "workbench.statusBar.visible": false,
+  "outline.problems.enabled": false,
+  "editor.minimap.enabled": false,
+  "editor.lineNumbers": "off",
 
-    // Terminal appearance.
-    "terminal.integrated.fontWeight": "bold",
-    "terminal.integrated.fontFamily": "monospace",
-    "terminal.integrated.tabs.defaultColor": "terminal.ansiRed",
-    "terminal.integrated.cursorStyle": "underline",
+  // Terminal appearance.
+  "terminal.integrated.fontWeight": "bold",
+  "terminal.integrated.fontFamily": "monospace",
+  "terminal.integrated.tabs.defaultColor": "terminal.ansiRed",
+  "terminal.integrated.cursorStyle": "underline",
 
-    // Formatting
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
-    "editor.formatOnSave": true,
-    "javascript.format.semicolons": "ignore"
+  // Formatting
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "editor.formatOnSave": true,
+  "javascript.format.semicolons": "ignore",
+
+  // Better Comments
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#FF2D00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "?",
+      "color": "#3498DB",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "todo",
+      "color": "#FF8C00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "*",
+      "color": "#98C379",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    }
+  ]
 }

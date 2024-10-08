@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { EmbedBuilder, Events } from "discord.js";
 import { Neet, NeetEvent } from "../../lib";
 import { CommandRunType } from "../../lib/Types/enum";
@@ -13,7 +14,8 @@ export default new NeetEvent<"interactionCreate">({
 
     const context = client.commands.get(interaction.commandName);
     if (!context) return;
-    console.debug(context);
+
+    client.emit("ci-debug", `Received command: ${context.data.name}`);
 
     // Check if the interaction command was ran in a Guild.
     if (interaction.inCachedGuild()) {
@@ -68,7 +70,25 @@ export default new NeetEvent<"interactionCreate">({
     }
 
     if (context.handler.run_type === CommandRunType.HANDLE) {
-      return;
+      client.emit("cl-debug", `Handling ${context.data.name} command.`);
+
+      if (interaction.options.getSubcommandGroup()) {
+        require(
+          `../commands/${interaction.commandName}/${interaction.options.getSubcommandGroup()}/${interaction.options.getSubcommand()}`,
+        ).run(interaction);
+        return;
+      } else if (
+        !interaction.options.getSubcommandGroup() &&
+        interaction.options.getSubcommand()
+      ) {
+        require(
+          `../commands/${interaction.commandName}/${interaction.options.getSubcommand()}`,
+        ).run(interaction);
+        return;
+      } else {
+        require(`../commands/${interaction.commandName}`).run(interaction);
+        return;
+      }
     }
 
     if (context.handler.run_type === CommandRunType.THIS) {
@@ -76,6 +96,8 @@ export default new NeetEvent<"interactionCreate">({
         writeWarn(`Missing "run" at command: ${context.data.name}`);
         return;
       }
+
+      client.emit('cl-debug', `Running ${context.data.name} command.`)
 
       context.run(interaction);
     }

@@ -11,7 +11,7 @@ import { CommandMode, CommandRunType } from "./enum";
 // Event Types.
 
 export interface INeetEvent<N = void> {
-  name: keyof ClientEvents;
+  name: keyof ClientEvents | string;
   once?: boolean;
   run: (...args: ClientEvents[N]) => void;
 }

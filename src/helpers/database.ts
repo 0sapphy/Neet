@@ -1,13 +1,14 @@
-import { CaseData, FilterProps } from "../../lib/Types/database";
+import { IFilterProperties } from "../../lib/Types/database";
 import { writeError } from "./logger";
 
-import { Users } from "../models/Users";
+import Guilds, { IGuildCase } from "../models/Guilds";
 
 function uniqueID(): string {
   return crypto.randomUUID();
 }
 
 // Fix types...
+/*
 export async function upsert(model: any, _data: FilterProps) {
   let data;
   let error = false;
@@ -27,19 +28,15 @@ export async function upsert(model: any, _data: FilterProps) {
     data,
     error,
   };
-}
+}*/
 
-export async function createCase(
-  userId: string,
-  data: CaseData,
-  options = { upsert: true, new: true },
-) {
+export async function createCase(filter: IFilterProperties, options: IGuildCase) {
   // Assign values to data.
-  Object.assign(data, { user_id: userId, case_id: uniqueID() });
+  Object.assign(options, { userId: filter.userId, caseId: uniqueID() });
 
-  return await Users.findOneAndUpdate(
-    { userId },
-    { $push: { cases: data } },
-    options,
+  return await Guilds.findOneAndUpdate(
+    filter,
+    { $push: { cases: options } },
+    { upsert: true, new: true },
   );
 }

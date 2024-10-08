@@ -9,6 +9,8 @@ import { NeetCommandBuilder } from "../../../lib";
 import { CommandMode, CommandRunType } from "../../../lib/Types/enum";
 import { emoji } from "../../helpers/utils";
 import { writeError, writeWarn } from "../../helpers/logger";
+import { createCase } from "../../helpers/database";
+import { ActionTypes } from "../../../lib/Types/database";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { options } = interaction;
@@ -103,6 +105,13 @@ async function BanMember(
   try {
     await interaction.guild.bans.create(member, {
       reason: options.reason,
+    });
+
+    await createCase({ guildId: interaction.guildId }, {
+      userId: member.id,
+      moderatorId: interaction.user.id,
+      actionType: ActionTypes.BAN,
+      reason: options.reason
     });
   } catch (error) {
     writeError("BanMember Error", error);

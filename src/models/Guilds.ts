@@ -1,34 +1,55 @@
+import mongoose from "mongoose";
+import { ActionTypes } from "../../lib/Types/database";
 
-import mongoose from "mongoose"
-
-const GuildSchema = new mongoose.Schema({
-  guildId: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-    unique: true,
-  },
-
-  automod_links_invite: {
-    enabled: {
-      type: mongoose.SchemaTypes.Boolean,
-      default: false,
+const GuildCases = new mongoose.Schema({
+    userId: {
+        type: mongoose.SchemaTypes.String,
+        required: true
     },
 
-    action: {
-      type: mongoose.SchemaTypes.String,
-      default: "warn",
+    moderatorId: {
+        type: mongoose.SchemaTypes.String,
+        required: true
     },
 
-    imune_roles: {
-      type: [mongoose.SchemaTypes.String],
-      default: null,
+    caseId: {
+        type: mongoose.SchemaTypes.String,
+        required: true
     },
 
-    whitelist: {
-      type: [mongoose.SchemaTypes.String],
-      default: null,
+    actionType: {
+        type: mongoose.SchemaTypes.Number,
+        required: true
     },
-  },
-});
 
-export const Guilds = mongoose.model("guilds", GuildSchema, "Guilds");
+    reason: {
+        type: mongoose.SchemaTypes.String,
+        default: "No Reason Provided"
+    }
+})
+
+export default mongoose.model('Guilds', new mongoose.Schema({
+    guildId: {
+        type: mongoose.SchemaTypes.String,
+        unique: true,
+        required: true
+    },
+
+    cases: {
+        type: [GuildCases],
+        default: null
+    }
+}));
+
+export interface IGuildCase {
+    userId: string;
+    moderatorId: string;
+    caseId?: string;
+    actionType: ActionTypes;
+    reason?: string;
+}
+
+export interface IGuild {
+    guildId: string;
+    cases: IGuildCase[] | null;
+}

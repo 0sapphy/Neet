@@ -1,4 +1,4 @@
-export interface FilterProps {
+export interface IFilterProperties {
   guildId?: string;
   userId?: string;
 }
@@ -10,13 +10,14 @@ export interface CaseData {
   guild_id: string;
   moderator_id: string;
   user_id?: string;
-  action: CaseActions;
+  action: ActionTypes;
   reason: string;
 }
 
 // Enums
-export enum CaseActions {
-  BAN = "ban",
-  KICK = "kick",
-  WARN = "warn",
+export enum ActionTypes {
+  BAN = 0,
+  KICK = 1,
+  WARN = 2,
+  AUTO_MODERATION = 3
 }
