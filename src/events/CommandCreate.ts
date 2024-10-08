@@ -73,20 +73,16 @@ export default new NeetEvent<"interactionCreate">({
       client.emit("cl-debug", `Handling ${context.data.name} command.`);
 
       if (interaction.options.getSubcommandGroup()) {
-        require(
-          `../commands/${interaction.commandName}/${interaction.options.getSubcommandGroup()}/${interaction.options.getSubcommand()}`,
-        ).run(interaction);
+        (await import(`../commands/${interaction.commandName}/${interaction.options.getSubcommandGroup()}/${interaction.options.getSubcommand()}`)).run(interaction);
         return;
       } else if (
         !interaction.options.getSubcommandGroup() &&
         interaction.options.getSubcommand()
       ) {
-        require(
-          `../commands/${interaction.commandName}/${interaction.options.getSubcommand()}`,
-        ).run(interaction);
+        (await import(`../commands/${interaction.commandName}/${interaction.options.getSubcommand()}`)).run(interaction);
         return;
       } else {
-        require(`../commands/${interaction.commandName}`).run(interaction);
+        (await import(`../commands/${interaction.commandName}`)).run(interaction);
         return;
       }
     }
