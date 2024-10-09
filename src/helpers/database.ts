@@ -1,38 +1,30 @@
 import { IFilterProperties } from "../../lib/Types/database";
-import { writeError } from "./logger";
-
 import Guilds, { IGuildCase } from "../models/Guilds";
 
 function uniqueID(): string {
   return crypto.randomUUID();
 }
 
-// Fix types...
-/*
-export async function upsert(model: any, _data: FilterProps) {
-  let data;
-  let error = false;
+export async function getCases(filter: IFilterProperties): Promise<IGuildCase[]|false> {
+  const cases: IGuildCase[] = [];
+  const data = await Guilds.findOne({ guildId: filter.guildId });
 
-  data = await model.findOne(_data).catch((err: Error) => {
-    writeError(`#upsert()`, err);
-    error = true;
-  });
+  // * If no case in guild return false;
+  if (!data?.cases) return false;
 
-  if (!data)
-    data = await model.create(_data).catch((err: Error) => {
-      writeError("#upsert()", err);
-      error = true;
-    });
+  // * If no cases for this user return false;
+  if (data.cases.filter(_ => _.userId === filter.userId).length < 1) return false;
 
-  return {
-    data,
-    error,
-  };
-}*/
+  for (const _case of data.cases.filter(_ => _.userId === filter.userId)) {
+    cases.push(_case);
+  }
+
+  return cases;
+}
 
 export async function createCase(filter: IFilterProperties, options: IGuildCase) {
   // Assign values to data.
-  Object.assign(options, { userId: filter.userId, caseId: uniqueID() });
+  Object.assign(options, { caseId: uniqueID() });
 
   return await Guilds.findOneAndUpdate(
     filter,
