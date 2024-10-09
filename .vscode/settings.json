@@ -19,6 +19,7 @@
   // Formatting
   "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
   "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
   "javascript.format.semicolons": "ignore",
 
   // Better Comments
