@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2024-10-09
+
+### 🚀 Features
+
+- GetCases() fix: createCase()
+- NeetButton
+
+### ⚙️ Miscellaneous Tasks
+
+- Prettier
+- Vscode / scripts
+
+### Add
+
+- (/whois): Cases
+
 ## [1.2.0] - 2024-10-08
 
 ### 🚀 Features
