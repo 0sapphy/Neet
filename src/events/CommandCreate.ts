@@ -73,16 +73,26 @@ export default new NeetEvent<"interactionCreate">({
       client.emit("cl-debug", `Handling ${context.data.name} command.`);
 
       if (interaction.options.getSubcommandGroup()) {
-        (await import(`../commands/${interaction.commandName}/${interaction.options.getSubcommandGroup()}/${interaction.options.getSubcommand()}`)).run(interaction);
+        (
+          await import(
+            `../commands/${interaction.commandName}/${interaction.options.getSubcommandGroup()}/${interaction.options.getSubcommand()}`
+          )
+        ).run(interaction);
         return;
       } else if (
         !interaction.options.getSubcommandGroup() &&
         interaction.options.getSubcommand()
       ) {
-        (await import(`../commands/${interaction.commandName}/${interaction.options.getSubcommand()}`)).run(interaction);
+        (
+          await import(
+            `../commands/${interaction.commandName}/${interaction.options.getSubcommand()}`
+          )
+        ).run(interaction);
         return;
       } else {
-        (await import(`../commands/${interaction.commandName}`)).run(interaction);
+        (await import(`../commands/${interaction.commandName}`)).run(
+          interaction,
+        );
         return;
       }
     }
@@ -93,7 +103,7 @@ export default new NeetEvent<"interactionCreate">({
         return;
       }
 
-      client.emit('cl-debug', `Running ${context.data.name} command.`)
+      client.emit("cl-debug", `Running ${context.data.name} command.`);
 
       context.run(interaction);
     }

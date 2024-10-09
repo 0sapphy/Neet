@@ -107,12 +107,15 @@ async function BanMember(
       reason: options.reason,
     });
 
-    await createCase({ guildId: interaction.guildId }, {
-      userId: member.id,
-      moderatorId: interaction.user.id,
-      actionType: ActionTypes.BAN,
-      reason: options.reason
-    });
+    await createCase(
+      { guildId: interaction.guildId },
+      {
+        userId: member.id,
+        moderatorId: interaction.user.id,
+        actionType: ActionTypes.BAN,
+        reason: options.reason,
+      },
+    );
   } catch (error) {
     writeError("BanMember Error", error);
   } finally {

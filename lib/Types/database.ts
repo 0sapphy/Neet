@@ -19,5 +19,5 @@ export enum ActionTypes {
   BAN = 0,
   KICK = 1,
   WARN = 2,
-  AUTO_MODERATION = 3
+  AUTO_MODERATION = 3,
 }

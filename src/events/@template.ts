@@ -1,5 +1,6 @@
 import { Events } from "discord.js";
 import { NeetEvent } from "../../lib";
+import { writeInfo } from '../helpers/logger'
 
 /* new NeetEvent<N>
  *               ^^^ > The event name, used for args.
@@ -10,6 +11,6 @@ export default new NeetEvent<"ready">({
   name: Events.ClientReady,
   once: true,
   run: (client) => {
-    console.log(client.user.username);
+    writeInfo(client.user.username);
   },
 });
