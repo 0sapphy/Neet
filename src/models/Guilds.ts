@@ -37,9 +37,23 @@ export default mongoose.model(
       required: true,
     },
 
+    settings: {
+      welcome: {
+        enabled: {
+          type: mongoose.SchemaTypes.Boolean,
+          default: false,
+        },
+
+        channel: {
+          type: mongoose.SchemaTypes.String,
+          default: null,
+        },
+      },
+    },
+
     cases: {
       type: [GuildCases],
-      default: null,
+      default: [],
     },
   }),
 );
@@ -52,7 +66,15 @@ export interface IGuildCase {
   reason?: string;
 }
 
+export interface ISettingsWelcome {
+  enabled: boolean;
+  channel: string;
+}
+
 export interface IGuild {
   guildId: string;
+  settings: {
+    welcome: ISettingsWelcome;
+  };
   cases: IGuildCase[] | null;
 }

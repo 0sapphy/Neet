@@ -14,10 +14,13 @@ export default new NeetEvent<"interactionCreate">({
     const button = new NeetButton(interaction);
     const parsed = button.parseId();
 
-    client.emit("cl-debug", `Received button interaction: ${parsed.identifiers.id}/${parsed.identifiers.subId}`);
+    client.emit(
+      "cl-debug",
+      `Received button interaction: ${parsed.identifiers.id}/${parsed.identifiers.subId}`,
+    );
 
     try {
-      client.emit("cl-debug", `Handing button interaction.`)
+      client.emit("cl-debug", `Handing button interaction.`);
 
       if (parsed.identifiers.subId) {
         (

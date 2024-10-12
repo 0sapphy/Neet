@@ -22,6 +22,6 @@ export default new NeetCommandBuilder({
   ],
 }).addHandlerOptions((options) => {
   return options
-    .setMode(CommandMode.DEVELOPING_STAGE)
+    .setMode(CommandMode.RECORDED_READY)
     .setRunType(CommandRunType.HANDLE);
 });

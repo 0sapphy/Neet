@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import { emoji } from "../../helpers/utils";
 import { getCases } from "../../helpers/database";
+import { NeetButton } from "../../../lib";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   await interaction.deferReply();
@@ -61,10 +62,15 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
     cases.length > 0 &&
     interaction.member.permissions.has("ModerateMembers")
   ) {
+    const customId = NeetButton.generateId(
+      "whois",
+      "display_cases",
+    ).setParameters([{ name: "user", value: user.id }]);
+
     const CaseButtonActionRow =
       new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
-          .setCustomId(`whois/display_cases=(user:${user.id})`)
+          .setCustomId(customId)
           .setLabel("Moderation Cases")
           .setStyle(ButtonStyle.Danger),
       );

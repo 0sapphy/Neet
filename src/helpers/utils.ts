@@ -1,11 +1,5 @@
 import emojis from "../../scripts/dev/emojis.json";
-import discord from "../../scripts/dev/discord";
 import { formatEmoji } from "discord.js";
-
-interface InviteLink {
-  matched: boolean;
-  codes: string[];
-}
 
 export function emoji(
   name: keyof typeof emojis,
@@ -15,8 +9,14 @@ export function emoji(
   return raw ? emoji : formatEmoji(emoji.id, emoji.animated);
 }
 
-export function searchInviteLinks(content: string) {
-  const official = content.match(discord.official);
+export function reverse(V: boolean | undefined | null): boolean {
+  return V ? false : true;
 }
 
-export function getInviteLinkCodes(links: string[]) {}
+export function status(
+  V: boolean | null | undefined,
+  component?: boolean,
+): string {
+  if (component) return V ? "Disable" : "Enable";
+  return V ? "Enabled" : "Disabled";
+}

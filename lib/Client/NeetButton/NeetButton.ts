@@ -58,4 +58,34 @@ export class NeetButton {
       parameters: new NeetButtonParameters(values),
     };
   }
+
+  /**
+   * @example
+   * this.generateId("this/that", [
+   * { name: "name", value: "value" }
+   * ]);
+   *
+   * // Usable example
+   * this.generateId([
+   * { name: "user_nickname", value: "xyz" },
+   * { name: "user_id", value: "100000000000000000" }
+   * ], "whois", "user")
+   */
+  static generateId(id: string, sub?: string) {
+    let finalId: string = `${id}${sub ? `/${sub}` : ""}`;
+
+    return {
+      generatedId: finalId,
+
+      setParameters: (parameters: IParameter[]) => {
+        let i: number = 0;
+        for (const parameter of parameters) {
+          i++;
+          finalId += `${i === 1 ? "=" : ""}(${parameter.name}:${parameter.value})${i > 0 ? "," : ""}`;
+        }
+
+        return finalId;
+      },
+    };
+  }
 }
