@@ -1,14 +1,46 @@
 import { IFilterProperties } from "../../lib/Types/database";
-import Guilds, { IGuildCase, IGuild } from "../models/Guilds";
+import Guilds, {
+  IModerationCase,
+  EnumModerationCaseFilterProperties,
+} from "../models/Guilds";
+import Settings, { ISetWelcome } from "../models/Settings";
+import { writeError } from "./logger";
+
+/* (**GUILD SETTING HELPERS**) (2024.10.13) */
+
+export async function updateWelcome(guildId: string, update: ISetWelcome) {
+  try {
+    const updateObj = {};
+    if (update.enabled != undefined)
+      Object.assign(updateObj, { "welcome.enabled": update.enabled });
+    if (update.channelId != undefined)
+      Object.assign(updateObj, { "welcome.channelId": update.channelId });
+
+    const data = await Settings.findOneAndUpdate({ guildId }, updateObj, {
+      upsert: true,
+      new: true,
+    });
+
+    return data.welcome;
+  } catch (error) {
+    writeError("updateWelcome", error);
+  }
+}
+
+/* (**DB HELPER FUNCTIONS**) (2024.10.13) */
 
 export function createDefaults(type: string, filter: IFilterProperties) {
   if (type === "guild") {
     const object = {
       guildId: "r-v",
-      settings: {
-        welcome: { enabled: false, channel: null },
-      },
       cases: [],
+    };
+
+    return replaceDefaultFilters(filter, object);
+  } else if (type === "setting") {
+    const object = {
+      guildId: "r-v",
+      welcome: { enabled: false, channelId: null },
     };
 
     return replaceDefaultFilters(filter, object);
@@ -26,35 +58,24 @@ function replaceDefaultFilters(filter: IFilterProperties, obj: any) {
   }
 }
 
-export async function upsert(
-  db: typeof Guilds,
-  filter: IFilterProperties,
-): Promise<IGuild> {
-  let data;
-  data = await db.findOne(filter);
-  if (!data) data = (await db.create(filter)).save();
-  //@ts-expect-error Type Error.
-  return data;
-}
-
-function uniqueID(): string {
-  return crypto.randomUUID();
-}
+/* (**CASE HELPER FUNCTIONS**) (**2024.10.13**) */
 
 export async function getCases(
-  filter: IFilterProperties,
-): Promise<IGuildCase[] | false> {
-  const cases: IGuildCase[] = [];
-  const data = await Guilds.findOne({ guildId: filter.guildId });
+  guildId: string,
+  filterBy: EnumModerationCaseFilterProperties,
+  equalsTo: string,
+): Promise<IModerationCase[] | false> {
+  const cases: IModerationCase[] = [];
+  const data = await Guilds.findOne({ guildId });
 
   // * If no case in guild return false;
   if (!data?.cases) return false;
 
   // * If no cases for this user return false;
-  if (data.cases.filter((_) => _.userId === filter.userId).length < 1)
+  if (data.cases.filter(($) => $[filterBy] === equalsTo).length < 1)
     return false;
 
-  for (const _case of data.cases.filter((_) => _.userId === filter.userId)) {
+  for (const _case of data.cases.filter(($) => $[filterBy] === equalsTo)) {
     cases.push(_case);
   }
 
@@ -63,11 +84,9 @@ export async function getCases(
 
 export async function createCase(
   filter: IFilterProperties,
-  options: IGuildCase,
+  options: IModerationCase,
 ) {
-  // Assign values to data.
-  Object.assign(options, { caseId: uniqueID() });
-
+  Object.assign(options, { caseId: crypto.randomUUID() });
   return await Guilds.findOneAndUpdate(
     filter,
     { $push: { cases: options } },
