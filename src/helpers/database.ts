@@ -3,20 +3,54 @@ import Guilds, {
   IModerationCase,
   EnumModerationCaseFilterProperties,
 } from "../models/Guilds";
-import Settings, { ISetWelcome } from "../models/Settings";
+import Settings, { ISetFarewell, ISetWelcome } from "../models/Settings";
 import { writeError } from "./logger";
 
-/* (**GUILD SETTING HELPERS**) (2024.10.13) */
+/* (**SETTING HELPERS**) (2024.10.14) */
+
+function assignUpdateData(
+  values: ISetWelcome | ISetFarewell,
+  prefix?: string,
+): ISetWelcome | ISetFarewell {
+  if (!prefix) {
+    prefix = "welcome";
+    if (values.type === 0) prefix = "welcome";
+    if (values.type === 1) prefix = "farwell";
+  }
+
+  const object = {};
+  const enabled = `${prefix}.enabled`;
+  const channelId = `${prefix}.channelId`;
+
+  if (values.enabled != undefined)
+    Object.assign(object, { [enabled]: values.enabled });
+  if (values.channelId != undefined)
+    Object.assign(object, { [channelId]: values.channelId });
+
+  return object;
+}
+
+export async function updateFarewell(guildId: string, update: ISetFarewell) {
+  try {
+    update.type = 1; // Type = farewell
+    const updateOBJ = assignUpdateData(update);
+
+    const data = await Settings.findOneAndUpdate({ guildId }, updateOBJ, {
+      upsert: true,
+      new: true,
+    });
+
+    return data.welcome;
+  } catch (error) {
+    writeError("updateFarewell", error);
+  }
+}
 
 export async function updateWelcome(guildId: string, update: ISetWelcome) {
   try {
-    const updateObj = {};
-    if (update.enabled != undefined)
-      Object.assign(updateObj, { "welcome.enabled": update.enabled });
-    if (update.channelId != undefined)
-      Object.assign(updateObj, { "welcome.channelId": update.channelId });
+    const updateOBJ = assignUpdateData(update);
 
-    const data = await Settings.findOneAndUpdate({ guildId }, updateObj, {
+    const data = await Settings.findOneAndUpdate({ guildId }, updateOBJ, {
       upsert: true,
       new: true,
     });
@@ -41,6 +75,7 @@ export function createDefaults(type: string, filter: IFilterProperties) {
     const object = {
       guildId: "r-v",
       welcome: { enabled: false, channelId: null },
+      farewell: { enabled: false, channelId: null },
     };
 
     return replaceDefaultFilters(filter, object);
