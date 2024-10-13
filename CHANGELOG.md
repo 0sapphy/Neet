@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2024-10-13
+
+### 🐛 Bug Fixes
+
+- /settings welcome fix
+
+### ⚙️ Miscellaneous Tasks
+
+- Moved settings separate
+- Moderation Case Edits
+
 ## [1.3.0] - 2024-10-09
 
 ### 🚀 Features
