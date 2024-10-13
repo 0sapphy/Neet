@@ -5,12 +5,12 @@ read -p "Script: " script
 if [ "$script" == "dev:esync" ];
   then
 
-  node syncEmojis.js
+  node scripts/emojis.js
+  node emojis.js
 
 elif [ "$script" == "start" ];
   then
   npm run start
-
 fi
 
 bash exe.sh
