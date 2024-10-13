@@ -1,71 +1,49 @@
 import {
   ActionRowBuilder,
-  APIButtonComponent,
-  APIChannelSelectComponent,
-  ButtonBuilder,
   ChannelSelectMenuBuilder,
+  channelMention,
   ChannelSelectMenuInteraction,
   EmbedBuilder,
+  APIChannelSelectComponent,
+  ButtonBuilder,
+  APIButtonComponent,
 } from "discord.js";
-import Guilds from "../../../../models/Guilds";
-import { status } from "../../../../helpers/utils";
+import { updateWelcome } from "../../../../helpers/database";
+import { emoji, reverse, status } from "../../../../helpers/utils";
 
-/**
- * Executed from /settings welcome
- */
-
-export async function run(interaction: ChannelSelectMenuInteraction) {
-  const { message } = interaction;
-
+export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
+  const {
+    guildId,
+    values,
+    message: { embeds, components },
+  } = interaction;
   await interaction.deferReply({ ephemeral: true });
-  const channelId = interaction.values.at(0);
 
-  const data = await Guilds.findOneAndUpdate(
-    { guildId: interaction.guildId },
-    {
-      settings: { welcome: { channel: channelId } },
-    },
-    { new: true },
-  );
+  const channelId = values[0];
+  const data = await updateWelcome(guildId, { channelId });
 
-  if (!data) {
-    interaction.editReply(`[ERROR]: database error.`);
-  }
+  const embed = EmbedBuilder.from(embeds[0])
+    .setDescription(
+      `**»** **Status »»»** ${status(data?.enabled)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,
+    )
+    .setColor(data?.enabled ? "Blurple" : "Orange");
 
-  const embed = new EmbedBuilder()
-    .setAuthor({
-      name: interaction.user.username,
-      iconURL: interaction.user.displayAvatarURL(),
-    })
-    .setTitle("Saved Welcome Settings")
-    .setDescription(`**»»** Channel: <#${data?.settings?.welcome?.channel}>`)
-    .setColor("Blurple")
-    .setTimestamp();
-
-  const OriginalEmbed = EmbedBuilder.from(
-    message.embeds[0].data,
-  ).setDescription(
-    `**»»** Status: ${status(data?.settings?.welcome?.enabled)}\n**»»** Channel: <#${data?.settings?.welcome?.channel}>`,
-  );
-
-  const button = ActionRowBuilder.from(message.components[1]).setComponents(
-    ButtonBuilder.from(
-      message.components[1].components[0].toJSON() as APIButtonComponent,
-    ),
-  ) as ActionRowBuilder<ButtonBuilder>;
-
-  const channelSelect = ActionRowBuilder.from(
-    message.components[0],
-  ).setComponents(
+  const channelSelect = ActionRowBuilder.from(components[0]).setComponents(
     ChannelSelectMenuBuilder.from(
-      message.components[0].components[0].toJSON() as APIChannelSelectComponent,
-    ).setDefaultChannels([channelId!]),
+      components[0].components[0] as unknown as APIChannelSelectComponent,
+    )
+      .setDisabled(reverse(data?.enabled))
+      .addDefaultChannels([channelId]),
   ) as ActionRowBuilder<ChannelSelectMenuBuilder>;
 
+  const statusButton = ActionRowBuilder.from(components[1]).setComponents(
+    ButtonBuilder.from(components[1].components[0] as APIButtonComponent),
+  ) as ActionRowBuilder<ButtonBuilder>;
+
   await interaction.message.edit({
-    embeds: [OriginalEmbed],
-    components: [channelSelect, button],
+    embeds: [embed],
+    components: [channelSelect, statusButton],
   });
 
-  return await interaction.editReply({ embeds: [embed] });
+  return await interaction.editReply(`${emoji("Checkmark")} | Saved Settings!`);
 }

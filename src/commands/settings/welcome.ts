@@ -2,68 +2,64 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  channelMention,
   ChannelSelectMenuBuilder,
   ChannelType,
   ChatInputCommandInteraction,
   EmbedBuilder,
 } from "discord.js";
-import Guilds from "../../models/Guilds";
-import { NeetButton } from "../../../lib";
-import { reverse, status } from "../../helpers/utils";
+import Settings from "../../models/Settings";
 import { createDefaults } from "../../helpers/database";
+import { reverse, status } from "../../helpers/utils";
+import { NeetButton } from "../../../lib";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
+  const { guildId, guild } = interaction;
   await interaction.deferReply();
 
-  let data = await Guilds.findOne({ guildId: interaction.guildId });
-  if (!data)
-    data = await (
-      await Guilds.create(
-        createDefaults("guild", { guildId: interaction.guildId }),
-      )
-    ).save();
+  let data = await Settings.findOne({ guildId: guildId });
+  if (!data) {
+    data = await Settings.create(createDefaults("setting", { guildId }));
+    data.save();
+  }
 
-  const settings = data.settings;
-
-  const buttonCustomId = NeetButton.generateId(
-    "welcome",
-    "status",
-  ).setParameters([
-    { name: "to", value: `${reverse(settings?.welcome?.enabled)}` },
-  ]);
-
-  const ButtonActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setCustomId(buttonCustomId)
-      .setLabel(status(settings?.welcome?.enabled, true))
-      .setStyle(
-        settings?.welcome?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
-      ),
-  );
-
-  const ChannelSelectMenu =
-    new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
-      new ChannelSelectMenuBuilder()
-        .setDisabled(reverse(settings?.welcome?.enabled))
-        .setCustomId(NeetButton.generateId("welcome", "channel").generatedId)
-        .setMaxValues(1)
-        .setChannelTypes([ChannelType.GuildText]),
-    );
+  if (!data) {
+    return interaction.editReply("[ERROR]: DB Error.");
+  }
 
   const embed = new EmbedBuilder()
-    .setAuthor({
-      name: interaction.user.username,
-      iconURL: interaction.user.displayAvatarURL(),
-    })
+    .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
     .setTitle("Configure Welcome Settings")
     .setDescription(
-      `**»»** Status: ${status(settings?.welcome?.enabled)}\n**»»** Channel: ${settings?.welcome?.channel ? `<#${settings.welcome.channel}>` : "None"}`,
+      `**»** **Status »»»** ${status(data.welcome?.enabled)}\n**»** **Channel »»»** ${data.welcome?.channelId ? channelMention(data.welcome.channelId) : "None"}`,
     )
     .setColor("Blurple")
     .setTimestamp();
 
-  interaction.editReply({
+  const channelSelect =
+    new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
+      new ChannelSelectMenuBuilder()
+        .setCustomId(NeetButton.generateId("welcome", "channel").generatedId)
+        .setChannelTypes([ChannelType.GuildText])
+        .setMaxValues(1)
+        .setDisabled(reverse(data.welcome?.enabled)),
+    );
+
+  const buttonId = NeetButton.generateId("welcome", "status").setParameters([
+    { name: "to", value: `${reverse(data.welcome?.enabled)}` },
+  ]);
+
+  const statusButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId(buttonId)
+      .setLabel(status(data.welcome?.enabled, true))
+      .setStyle(
+        data.welcome?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
+      ),
+  );
+
+  return await interaction.editReply({
     embeds: [embed],
-    components: [ChannelSelectMenu, ButtonActionRow],
+    components: [channelSelect, statusButton],
   });
 }
