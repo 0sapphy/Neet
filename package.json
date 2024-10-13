@@ -11,6 +11,7 @@
   "author": "0sapphy",
   "license": "MIT",
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.56",
     "chalk": "^4.1.0",
     "discord.js": "^14.16.1",
     "moment": "^2.30.1",
