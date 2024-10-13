@@ -37,20 +37,6 @@ export default mongoose.model(
       required: true,
     },
 
-    settings: {
-      welcome: {
-        enabled: {
-          type: mongoose.SchemaTypes.Boolean,
-          default: false,
-        },
-
-        channel: {
-          type: mongoose.SchemaTypes.String,
-          default: null,
-        },
-      },
-    },
-
     cases: {
       type: [GuildCases],
       default: [],
@@ -58,7 +44,12 @@ export default mongoose.model(
   }),
 );
 
-export interface IGuildCase {
+export interface IGuild {
+  guildId: string;
+  cases: IModerationCase[] | never[];
+}
+
+export interface IModerationCase {
   userId: string;
   moderatorId: string;
   caseId?: string;
@@ -66,15 +57,8 @@ export interface IGuildCase {
   reason?: string;
 }
 
-export interface ISettingsWelcome {
-  enabled: boolean;
-  channel: string;
-}
-
-export interface IGuild {
-  guildId: string;
-  settings: {
-    welcome: ISettingsWelcome;
-  };
-  cases: IGuildCase[] | null;
+export enum EnumModerationCaseFilterProperties {
+  userId = "userId",
+  moderatorId = "moderatorId",
+  caseId = "caseId",
 }
