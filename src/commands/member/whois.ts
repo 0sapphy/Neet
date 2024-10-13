@@ -8,6 +8,7 @@ import {
 import { emoji } from "../../helpers/utils";
 import { getCases } from "../../helpers/database";
 import { NeetButton } from "../../../lib";
+import { EnumModerationCaseFilterProperties } from "../../models/Guilds";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   await interaction.deferReply();
@@ -51,11 +52,11 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
     ack = true;
   }
 
-  // TODO: Case buttons
-  const cases = await getCases({
-    guildId: interaction.guildId,
-    userId: user.id,
-  });
+  const cases = await getCases(
+    interaction.guildId,
+    EnumModerationCaseFilterProperties.userId,
+    user.id,
+  );
 
   if (
     cases != false &&
