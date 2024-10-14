@@ -40,7 +40,7 @@ export async function updateFarewell(guildId: string, update: ISetFarewell) {
       new: true,
     });
 
-    return data.welcome;
+    return data.farewell;
   } catch (error) {
     writeError("updateFarewell", error);
   }
