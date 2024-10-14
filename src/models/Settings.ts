@@ -12,10 +12,22 @@ export default mongoose.model(
       enabled: mongoose.SchemaTypes.Boolean,
       channelId: mongoose.SchemaTypes.String,
     },
+
+    farewell: {
+      enabled: mongoose.SchemaTypes.Boolean,
+      channelId: mongoose.SchemaTypes.String,
+    },
   }),
 );
 
 export interface ISetWelcome {
   enabled?: boolean;
   channelId?: string;
+  type?: number;
+}
+
+export interface ISetFarewell {
+  enabled?: boolean;
+  channelId?: string;
+  type?: number;
 }
