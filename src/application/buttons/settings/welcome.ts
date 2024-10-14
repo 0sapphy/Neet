@@ -11,12 +11,19 @@ import {
 } from "discord.js";
 import { NeetButton, NeetButtonParameters } from "../../../../lib";
 import { updateWelcome } from "../../../helpers/database";
-import { emoji, reverse, status as Status } from "../../../helpers/utils";
+import {
+  commandUserOnly,
+  emoji,
+  reverse,
+  status as Status,
+} from "../../../helpers/utils";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
   parameters: NeetButtonParameters,
 ) {
+  if (commandUserOnly(interaction)) return;
+
   const {
     guildId,
     message: { embeds, components },
@@ -42,7 +49,7 @@ export async function run(
     ).setDisabled(reverse(status)),
   ) as ActionRowBuilder<ChannelSelectMenuBuilder>;
 
-  const buttonId = NeetButton.generateId("welcome", "status").setParameters([
+  const buttonId = NeetButton.generateId("settings", "welcome").setParameters([
     { name: "to", value: `${reverse(data?.enabled)}` },
   ]);
 

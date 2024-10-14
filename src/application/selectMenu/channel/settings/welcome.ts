@@ -9,9 +9,16 @@ import {
   APIButtonComponent,
 } from "discord.js";
 import { updateWelcome } from "../../../../helpers/database";
-import { emoji, reverse, status } from "../../../../helpers/utils";
+import {
+  commandUserOnly,
+  emoji,
+  reverse,
+  status,
+} from "../../../../helpers/utils";
 
 export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
+  if (commandUserOnly(interaction)) return;
+
   const {
     guildId,
     values,

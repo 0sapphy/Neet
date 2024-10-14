@@ -39,13 +39,13 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const channelSelect =
     new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
       new ChannelSelectMenuBuilder()
-        .setCustomId(NeetButton.generateId("welcome", "channel").generatedId)
+        .setCustomId(NeetButton.generateId("settings", "welcome").generatedId)
         .setChannelTypes([ChannelType.GuildText])
         .setMaxValues(1)
         .setDisabled(reverse(data.welcome?.enabled)),
     );
 
-  const buttonId = NeetButton.generateId("welcome", "status").setParameters([
+  const buttonId = NeetButton.generateId("settings", "welcome").setParameters([
     { name: "to", value: `${reverse(data.welcome?.enabled)}` },
   ]);
 
