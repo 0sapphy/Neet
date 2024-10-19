@@ -12,11 +12,13 @@
   "license": "MIT",
   "dependencies": {
     "@napi-rs/canvas": "^0.1.56",
+    "@typegoose/typegoose": "^12.8.0",
     "chalk": "^4.1.0",
     "discord.js": "^14.16.1",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
-    "mongoose": "^8.6.1"
+    "mongoose": "^8.7.2",
+    "neet-canvas.js": "^0.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
