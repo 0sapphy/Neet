@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { Neet } from "../../lib";
 import { writeInfo } from "./logger";
 import { readdir } from "node:fs/promises";
