@@ -39,7 +39,7 @@ process.loadEnvFile(".env");
   console.info(`[NEET]: Saving emoji data to emojis.json`);
 
   require("node:fs/promises")
-    .writeFile("../scripts/dev/emojis.json", JSON.stringify(file_data, null, 1))
+    .writeFile("./scripts/emojis.json", JSON.stringify(file_data, null, 1))
     .then(() => {
       console.info(`[NEET]: Saved ${data.length} emojis to emojis.json`);
     })

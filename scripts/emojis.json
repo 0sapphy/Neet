@@ -1,0 +1,98 @@
+{
+ "Checkmark": {
+  "id": "1264544804365271070",
+  "name": "Checkmark",
+  "user": {
+   "id": "500658624109084682",
+   "username": "Emoji.gg",
+   "avatar": "a_032f5c4de61d7d06bc1c038d9d24d37c",
+   "discriminator": "7083",
+   "public_flags": 65536,
+   "flags": 65536,
+   "bot": true,
+   "banner": null,
+   "accent_color": null,
+   "global_name": null,
+   "avatar_decoration_data": null,
+   "banner_color": null,
+   "clan": null
+  },
+  "roles": [],
+  "require_colons": true,
+  "managed": false,
+  "animated": false,
+  "available": true
+ },
+ "Xmark": {
+  "id": "1264683663430516868",
+  "name": "Xmark",
+  "user": {
+   "id": "500658624109084682",
+   "username": "Emoji.gg",
+   "avatar": "a_032f5c4de61d7d06bc1c038d9d24d37c",
+   "discriminator": "7083",
+   "public_flags": 65536,
+   "flags": 65536,
+   "bot": true,
+   "banner": null,
+   "accent_color": null,
+   "global_name": null,
+   "avatar_decoration_data": null,
+   "banner_color": null,
+   "clan": null
+  },
+  "roles": [],
+  "require_colons": true,
+  "managed": false,
+  "animated": false,
+  "available": true
+ },
+ "Toggle_on": {
+  "id": "1266687420473282625",
+  "name": "Toggle_on",
+  "user": {
+   "id": "500658624109084682",
+   "username": "Emoji.gg",
+   "avatar": "a_032f5c4de61d7d06bc1c038d9d24d37c",
+   "discriminator": "7083",
+   "public_flags": 65536,
+   "flags": 65536,
+   "bot": true,
+   "banner": null,
+   "accent_color": null,
+   "global_name": null,
+   "avatar_decoration_data": null,
+   "banner_color": null,
+   "clan": null
+  },
+  "roles": [],
+  "require_colons": true,
+  "managed": false,
+  "animated": false,
+  "available": true
+ },
+ "Toggle_OFF": {
+  "id": "1266687467080253441",
+  "name": "Toggle_OFF",
+  "user": {
+   "id": "500658624109084682",
+   "username": "Emoji.gg",
+   "avatar": "a_032f5c4de61d7d06bc1c038d9d24d37c",
+   "discriminator": "7083",
+   "public_flags": 65536,
+   "flags": 65536,
+   "bot": true,
+   "banner": null,
+   "accent_color": null,
+   "global_name": null,
+   "avatar_decoration_data": null,
+   "banner_color": null,
+   "clan": null
+  },
+  "roles": [],
+  "require_colons": true,
+  "managed": false,
+  "animated": false,
+  "available": true
+ }
+}
