@@ -7,8 +7,7 @@ import { NeetCommandBuilder } from "../../../lib";
 import { CommandMode, CommandRunType } from "../../../lib/Types/enum";
 import { emoji } from "../../helpers/utils";
 import { writeError, writeWarn } from "../../helpers/logger";
-import { createCase } from "../../helpers/database";
-import { ActionTypes } from "../../../lib/Types/database";
+import { Guild, ModerationCaseActions } from "../../models/Guilds";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { options } = interaction;
@@ -72,15 +71,12 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   try {
     await member.kick(reason);
 
-    await createCase(
-      { guildId: interaction.guildId },
-      {
-        userId: member.id,
-        moderatorId: interaction.user.id,
-        actionType: ActionTypes.KICK,
-        reason,
-      },
-    );
+    await Guild.CREATEcase(interaction.guildId, {
+      userId: member.id,
+      moderatorId: interaction.user.id,
+      actionType: ModerationCaseActions.Kick,
+      reason,
+    });
   } catch (error) {
     writeError("KickMember Error", error);
   } finally {

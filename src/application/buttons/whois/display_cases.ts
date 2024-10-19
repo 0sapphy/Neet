@@ -1,7 +1,6 @@
 import { ButtonInteraction, EmbedBuilder } from "discord.js";
 import { NeetButtonParameters } from "../../../../lib";
-import { getCases } from "../../../helpers/database";
-import { EnumModerationCaseFilterProperties } from "../../../models/Guilds";
+import { Guild } from "../../../models/Guilds";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
@@ -23,11 +22,7 @@ export async function run(
   const userId = parameters.get("user");
   if (!userId) return; // This will never get executed.
 
-  const data = await getCases(
-    interaction.guildId,
-    EnumModerationCaseFilterProperties.userId,
-    userId,
-  );
+  const data = await Guild.GETcasesForUser(interaction.guildId, userId);
 
   if (!data) {
     return interaction.editReply({

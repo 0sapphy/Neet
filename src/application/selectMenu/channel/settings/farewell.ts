@@ -14,7 +14,7 @@ import {
   reverse,
   status,
 } from "../../../../helpers/utils";
-import { updateFarewell } from "../../../../helpers/database";
+import { Setting } from "../../../../models/Settings";
 
 export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
   if (commandUserOnly(interaction)) return;
@@ -27,7 +27,7 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
   await interaction.deferReply({ ephemeral: true });
 
   const channelId = values[0];
-  const data = await updateFarewell(guildId, { channelId });
+  const data = await Setting.UPDATEFarewell(guildId, { channelId });
 
   const embed = EmbedBuilder.from(embeds[0]).setDescription(
     `**»** **Status »»»** ${status(data?.enabled)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,

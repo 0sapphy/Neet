@@ -16,7 +16,7 @@ import {
   reverse,
   status as Status,
 } from "../../../helpers/utils";
-import { updateFarewell } from "../../../helpers/database";
+import { Setting } from "../../../models/Settings";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
@@ -31,13 +31,13 @@ export async function run(
   await interaction.deferReply({ ephemeral: true });
 
   const status = parameters.boolean("to");
-  if (!status) return; // this wont execute.
+  if (status === null) return; // this wont execute.
 
-  const data = await updateFarewell(guildId, { enabled: status });
+  const data = await Setting.UPDATEFarewell(guildId, { enabled: status });
 
   const embed = EmbedBuilder.from(embeds[0])
     .setDescription(
-      `**»** **Status »»»** ${Status(status)}\n**»** **Chnanel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,
+      `**»** **Status »»»** ${Status(status)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,
     )
     .setColor(status ? "Blurple" : "Orange");
 

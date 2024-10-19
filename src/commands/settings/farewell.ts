@@ -8,8 +8,7 @@ import {
   ChatInputCommandInteraction,
   EmbedBuilder,
 } from "discord.js";
-import Settings from "../../models/Settings";
-import { createDefaults } from "../../helpers/database";
+import { Setting } from "../../models/Settings";
 import { reverse, status } from "../../helpers/utils";
 import { NeetButton } from "../../../lib";
 
@@ -18,9 +17,9 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   await interaction.deferReply();
 
   let data;
-  data = await Settings.findOne({ guildId });
+  data = await Setting.findOne({ guildId });
   if (!data) {
-    data = await Settings.create(createDefaults("setting", { guildId }));
+    data = await Setting.create({ guildId });
     await data.save();
   }
 

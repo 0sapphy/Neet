@@ -10,13 +10,13 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import { NeetButton, NeetButtonParameters } from "../../../../lib";
-import { updateWelcome } from "../../../helpers/database";
 import {
   commandUserOnly,
   emoji,
   reverse,
   status as Status,
 } from "../../../helpers/utils";
+import { Setting } from "../../../models/Settings";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
@@ -33,9 +33,7 @@ export async function run(
   const status = parameters.boolean("to");
   if (status === null) return;
 
-  const data = await updateWelcome(guildId, {
-    enabled: status,
-  });
+  const data = await Setting.UPDATEWelcome(guildId, { enabled: status });
 
   const embed = EmbedBuilder.from(embeds[0])
     .setDescription(
