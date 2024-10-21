@@ -1,6 +1,6 @@
 import { Events } from "discord.js";
 import { NeetEvent, Neet } from "../../lib";
-import { NeetButton } from "../../lib/Client/NeetButton/NeetButton";
+import { parseId } from "../../lib";
 import { writeError } from "../helpers/logger";
 
 export default new NeetEvent<"interactionCreate">({
@@ -11,29 +11,18 @@ export default new NeetEvent<"interactionCreate">({
     const client = interaction.client as Neet;
     client.emit("cl-debug", `Received a button interaction.`);
 
-    const button = new NeetButton(interaction);
-    const parsed = button.parseId();
+    const parsed = parseId(interaction.customId);
 
     client.emit(
       "cl-debug",
-      `Received button interaction: ${parsed.identifiers.id}/${parsed.identifiers.subId}`,
+      `Received button interaction: ${parsed.id}/${parsed.sub_id}`,
     );
 
     try {
       client.emit("cl-debug", `Handing button interaction.`);
-
-      if (parsed.identifiers.subId) {
-        (
-          await import(
-            `../application/buttons/${parsed.identifiers.id}/${parsed.identifiers.subId}`
-          )
-        ).run(interaction, parsed.parameters);
-      } else {
-        (await import(`../application/buttons/${parsed.identifiers.id}`)).run(
-          interaction,
-          parsed.parameters,
-        );
-      }
+      (
+        await import(`../application/buttons/${parsed.id}/${parsed.sub_id}`)
+      ).run(interaction, parsed.args);
     } catch (error) {
       writeError("ButtonCreate", error);
     }

@@ -6,7 +6,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import { emoji } from "../../helpers/utils";
-import { NeetButton } from "../../../lib";
+import { customId } from "../../../lib";
 import { Guild } from "../../models/Guilds";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
@@ -55,15 +55,14 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
     const cases = await Guild.GETcasesForUser(interaction.guildId, user.id);
 
     if (cases != false && cases.length > 0) {
-      const customId = NeetButton.generateId(
-        "whois",
-        "display_cases",
-      ).setParameters([{ name: "user", value: user.id }]);
+      const caseBTNId = customId("whois", "display_cases", [
+        { name: "user", value: user.id },
+      ]);
 
       const CaseButtonActionRow =
         new ActionRowBuilder<ButtonBuilder>().addComponents(
           new ButtonBuilder()
-            .setCustomId(customId)
+            .setCustomId(caseBTNId)
             .setLabel("Moderation Cases")
             .setStyle(ButtonStyle.Danger),
         );

@@ -1,3 +1,7 @@
+/**
+ * CHANGE THE STATUS FOR "settings.farewell"
+ */
+
 import {
   ActionRowBuilder,
   APIButtonComponent,
@@ -9,7 +13,7 @@ import {
   ChannelSelectMenuBuilder,
   EmbedBuilder,
 } from "discord.js";
-import { NeetButton, NeetButtonParameters } from "../../../../lib";
+import { Arguments, componentGetBoolean, customId } from "../../../../lib";
 import {
   commandUserOnly,
   emoji,
@@ -20,7 +24,7 @@ import { Setting } from "../../../models/Settings";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
-  parameters: NeetButtonParameters,
+  parameters: Arguments[],
 ) {
   if (commandUserOnly(interaction)) return;
 
@@ -30,10 +34,13 @@ export async function run(
   } = interaction;
   await interaction.deferReply({ ephemeral: true });
 
-  const status = parameters.boolean("to");
-  if (status === null) return; // this wont execute.
+  const status = componentGetBoolean(parameters, "to");
+  if (status === null) return; // WNE*
 
-  const data = await Setting.UPDATEFarewell(guildId, { enabled: status });
+  const data = await Setting.UPDATEFarewell(
+    guildId,
+    status ? { enabled: status } : { enabled: status, channelId: null },
+  );
 
   const embed = EmbedBuilder.from(embeds[0])
     .setDescription(
@@ -47,8 +54,8 @@ export async function run(
     ).setDisabled(reverse(status)),
   ) as ActionRowBuilder<ChannelSelectMenuBuilder>;
 
-  const buttonId = NeetButton.generateId("settings", "farewell").setParameters([
-    { name: "to", value: `${reverse(status)}` },
+  const buttonId = customId("settings", "farewell", [
+    { name: "to", value: reverse(status) },
   ]);
 
   const statusButton = ActionRowBuilder.from(components[1]).setComponents(

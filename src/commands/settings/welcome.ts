@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import { Setting } from "../../models/Settings";
 import { reverse, status } from "../../helpers/utils";
-import { NeetButton } from "../../../lib";
+import { customId } from "../../../lib";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { guildId, guild } = interaction;
@@ -38,27 +38,35 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const channelSelect =
     new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
       new ChannelSelectMenuBuilder()
-        .setCustomId(NeetButton.generateId("settings", "welcome").generatedId)
+        .setCustomId(customId("settings", "welcome"))
         .setChannelTypes([ChannelType.GuildText])
         .setMaxValues(1)
         .setDisabled(reverse(data.welcome?.enabled)),
     );
 
-  const buttonId = NeetButton.generateId("settings", "welcome").setParameters([
+  const buttonId = customId("settings", "welcome", [
     { name: "to", value: `${reverse(data.welcome?.enabled)}` },
   ]);
 
-  const statusButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  const settingButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId(buttonId)
       .setLabel(status(data.welcome?.enabled, true))
       .setStyle(
         data.welcome?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
       ),
+
+    new ButtonBuilder()
+      .setCustomId(
+        customId("settings", "message", [{ name: "for", value: "welcome" }]),
+      )
+      .setLabel("Message Options")
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(reverse(data.welcome?.enabled)),
   );
 
   return await interaction.editReply({
     embeds: [embed],
-    components: [channelSelect, statusButton],
+    components: [channelSelect, settingButtons],
   });
 }

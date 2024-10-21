@@ -43,13 +43,14 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
       .addDefaultChannels([channelId]),
   ) as ActionRowBuilder<ChannelSelectMenuBuilder>;
 
-  const statusButton = ActionRowBuilder.from(components[1]).setComponents(
+  const settingButtons = ActionRowBuilder.from(components[1]).setComponents(
     ButtonBuilder.from(components[1].components[0] as APIButtonComponent),
+    ButtonBuilder.from(components[1].components[1] as APIButtonComponent),
   ) as ActionRowBuilder<ButtonBuilder>;
 
   await interaction.message.edit({
     embeds: [embed],
-    components: [channelSelect, statusButton],
+    components: [channelSelect, settingButtons],
   });
 
   return await interaction.editReply(`${emoji("Checkmark")} | Saved Settings!`);

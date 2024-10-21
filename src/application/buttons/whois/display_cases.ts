@@ -1,10 +1,10 @@
 import { ButtonInteraction, EmbedBuilder } from "discord.js";
-import { NeetButtonParameters } from "../../../../lib";
+import { Arguments, componentGetString } from "../../../../lib";
 import { Guild } from "../../../models/Guilds";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
-  parameters: NeetButtonParameters,
+  parameters: Arguments[],
 ) {
   if (!interaction.member.permissions.has("ModerateMembers")) {
     return interaction.reply({
@@ -19,8 +19,8 @@ export async function run(
 
   await interaction.deferReply({ ephemeral: true });
 
-  const userId = parameters.get("user");
-  if (!userId) return; // This will never get executed.
+  const userId = componentGetString(parameters, "userId");
+  if (!userId) return; // WNE*
 
   const data = await Guild.GETcasesForUser(interaction.guildId, userId);
 

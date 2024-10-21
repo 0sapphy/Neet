@@ -1,4 +1,4 @@
-import emojis from "../../scripts/dev/emojis.json";
+import emojis from "../../scripts/emojis.json";
 import {
   ButtonInteraction,
   ChannelSelectMenuInteraction,

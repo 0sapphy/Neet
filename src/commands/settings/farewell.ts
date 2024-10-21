@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import { Setting } from "../../models/Settings";
 import { reverse, status } from "../../helpers/utils";
-import { NeetButton } from "../../../lib";
+import { customId } from "../../../lib";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { guildId, guild } = interaction;
@@ -35,13 +35,13 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const channelSelect =
     new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
       new ChannelSelectMenuBuilder()
-        .setCustomId(NeetButton.generateId("settings", "farewell").generatedId)
+        .setCustomId(customId("settings", "farewell"))
         .setChannelTypes([ChannelType.GuildText])
         .setDisabled(reverse(data.farewell?.enabled))
         .setMaxValues(1),
     );
 
-  const buttonId = NeetButton.generateId("settings", "farewell").setParameters([
+  const buttonId = customId("settings", "farewell", [
     { name: "to", value: `${reverse(data.farewell?.enabled)}` },
   ]);
 
@@ -52,6 +52,14 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
       .setStyle(
         data.farewell?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
       ),
+
+    new ButtonBuilder()
+      .setCustomId(
+        customId("settings", "message", [{ name: "for", value: "farewell" }]),
+      )
+      .setLabel("Message Options")
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(reverse(data.farewell?.enabled)),
   );
 
   return await interaction.editReply({

@@ -1,3 +1,7 @@
+/**
+ * CHANGE THE STATUS FOR "settings.welcome"
+ */
+
 import {
   ActionRowBuilder,
   APIButtonComponent,
@@ -9,7 +13,7 @@ import {
   ChannelSelectMenuBuilder,
   EmbedBuilder,
 } from "discord.js";
-import { NeetButton, NeetButtonParameters } from "../../../../lib";
+import { Arguments, componentGetBoolean, customId } from "../../../../lib";
 import {
   commandUserOnly,
   emoji,
@@ -20,7 +24,7 @@ import { Setting } from "../../../models/Settings";
 
 export async function run(
   interaction: ButtonInteraction<"cached">,
-  parameters: NeetButtonParameters,
+  parameters: Arguments[],
 ) {
   if (commandUserOnly(interaction)) return;
 
@@ -30,10 +34,17 @@ export async function run(
   } = interaction;
   await interaction.deferReply({ ephemeral: true });
 
-  const status = parameters.boolean("to");
+  const status = componentGetBoolean(parameters, "to");
   if (status === null) return;
 
-  const data = await Setting.UPDATEWelcome(guildId, { enabled: status });
+  const data = await Setting.UPDATEWelcome(
+    guildId,
+    status
+      ? {
+          enabled: status,
+        }
+      : { enabled: status, channelId: null },
+  );
 
   const embed = EmbedBuilder.from(embeds[0])
     .setDescription(
@@ -47,20 +58,24 @@ export async function run(
     ).setDisabled(reverse(status)),
   ) as ActionRowBuilder<ChannelSelectMenuBuilder>;
 
-  const buttonId = NeetButton.generateId("settings", "welcome").setParameters([
-    { name: "to", value: `${reverse(data?.enabled)}` },
+  const buttonId = customId("settings", "welcome", [
+    { name: "to", value: reverse(data?.enabled) },
   ]);
 
-  const statusButton = ActionRowBuilder.from(components[1]).setComponents(
+  const settingButtons = ActionRowBuilder.from(components[1]).setComponents(
     ButtonBuilder.from(components[1].components[0] as APIButtonComponent)
       .setCustomId(buttonId)
       .setLabel(Status(status, true))
       .setStyle(status ? ButtonStyle.Danger : ButtonStyle.Success),
+
+    ButtonBuilder.from(
+      components[1].components[1] as APIButtonComponent,
+    ).setDisabled(reverse(data?.enabled)),
   ) as ActionRowBuilder<ButtonBuilder>;
 
   await interaction.message.edit({
     embeds: [embed],
-    components: [channelSelect, statusButton],
+    components: [channelSelect, settingButtons],
   });
 
   return await interaction.editReply(`${emoji("Checkmark")} | Saved Settings!`);
