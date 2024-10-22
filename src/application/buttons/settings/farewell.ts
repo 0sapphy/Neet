@@ -15,7 +15,7 @@ import {
 } from "discord.js";
 import { Arguments, componentGetBoolean, customId } from "../../../../lib";
 import {
-  commandUserOnly,
+  isCommandUser,
   emoji,
   reverse,
   status as Status,
@@ -26,7 +26,7 @@ export async function run(
   interaction: ButtonInteraction<"cached">,
   parameters: Arguments[],
 ) {
-  if (commandUserOnly(interaction)) return;
+  if (!isCommandUser(interaction)) return;
 
   const {
     guildId,
@@ -37,7 +37,7 @@ export async function run(
   const status = componentGetBoolean(parameters, "to");
   if (status === null) return; // WNE*
 
-  const data = await Setting.UPDATEFarewell(
+  const data = await Setting.UpdateFarewell(
     guildId,
     status ? { enabled: status } : { enabled: status, channelId: null },
   );
@@ -63,6 +63,10 @@ export async function run(
       .setCustomId(buttonId)
       .setLabel(Status(status, true))
       .setStyle(status ? ButtonStyle.Danger : ButtonStyle.Success),
+
+    ButtonBuilder.from(
+      components[1].components[1] as APIButtonComponent,
+    ).setDisabled(reverse(status)),
   ) as ActionRowBuilder<ButtonBuilder>;
 
   await interaction.message.edit({

@@ -106,7 +106,7 @@ async function BanMember(
       reason: options.reason,
     });
 
-    await Guild.CREATEcase(interaction.guildId, {
+    await Guild.createCase(interaction.guildId, {
       userId: member.id,
       moderatorId: interaction.user.id,
       actionType: ModerationCaseActions.Ban,

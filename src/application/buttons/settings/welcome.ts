@@ -15,7 +15,7 @@ import {
 } from "discord.js";
 import { Arguments, componentGetBoolean, customId } from "../../../../lib";
 import {
-  commandUserOnly,
+  isCommandUser,
   emoji,
   reverse,
   status as Status,
@@ -26,7 +26,7 @@ export async function run(
   interaction: ButtonInteraction<"cached">,
   parameters: Arguments[],
 ) {
-  if (commandUserOnly(interaction)) return;
+  if (!isCommandUser(interaction)) return;
 
   const {
     guildId,
@@ -37,7 +37,7 @@ export async function run(
   const status = componentGetBoolean(parameters, "to");
   if (status === null) return;
 
-  const data = await Setting.UPDATEWelcome(
+  const data = await Setting.UpdateWelcome(
     guildId,
     status
       ? {

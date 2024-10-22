@@ -52,7 +52,7 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   }
 
   if (interaction.member.permissions.has("ModerateMembers")) {
-    const cases = await Guild.GETcasesForUser(interaction.guildId, user.id);
+    const cases = await Guild.getUserCases(interaction.guildId, user.id);
 
     if (cases != false && cases.length > 0) {
       const caseBTNId = customId("whois", "display_cases", [

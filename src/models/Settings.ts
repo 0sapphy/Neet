@@ -8,8 +8,9 @@ import {
 } from "@typegoose/typegoose";
 import { QueryOptions } from "mongoose";
 
-export function UTILMakeUpdatable(object: UpdateQueryAnyGreeting) {
+export function MakeUpdateable(object: UpdateQueryAnyGreeting) {
   const makeProperty = (prop: string): string => `${object.prefix}.${prop}`;
+
   const data = {};
 
   if (object.channelId != undefined)
@@ -30,7 +31,7 @@ export function UTILMakeUpdatable(object: UpdateQueryAnyGreeting) {
 }
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
-export class SettingClass {
+export class SettingSchema {
   @prop({ required: true })
   public guildId!: string;
 
@@ -38,52 +39,44 @@ export class SettingClass {
   public welcome?: {
     enabled: boolean;
     channelId: string;
-    options: MessageOptionClass;
+    options: MessageOptionSchema;
   };
 
   @prop({ default: { enabled: false, channelId: null } })
   public farewell?: {
     enabled: boolean;
     channelId: string;
-    options: MessageOptionClass;
+    options: MessageOptionSchema;
   };
 
-  static async UPDATEFarewell(
-    this: ReturnModelType<typeof SettingClass>,
+  static async UpdateFarewell(
+    this: ReturnModelType<typeof SettingSchema>,
     guildId: string,
     update: UpdateQueryAnyGreeting,
-    options?: QueryOptions<SettingClass>,
+    options?: QueryOptions<SettingSchema>,
   ) {
     options ??= { upsert: true, new: true };
     update.prefix = "farewell";
     return (
-      await this.findOneAndUpdate(
-        { guildId },
-        UTILMakeUpdatable(update),
-        options,
-      )
+      await this.findOneAndUpdate({ guildId }, MakeUpdateable(update), options)
     )?.farewell;
   }
 
-  static async UPDATEWelcome(
-    this: ReturnModelType<typeof SettingClass>,
+  static async UpdateWelcome(
+    this: ReturnModelType<typeof SettingSchema>,
     guildId: string,
     update: UpdateQueryAnyGreeting,
-    options?: QueryOptions<SettingClass>,
+    options?: QueryOptions<SettingSchema>,
   ) {
     options ??= { upsert: true, new: true };
     update.prefix = "welcome";
     return (
-      await this.findOneAndUpdate(
-        { guildId },
-        UTILMakeUpdatable(update),
-        options,
-      )
+      await this.findOneAndUpdate({ guildId }, MakeUpdateable(update), options)
     )?.welcome;
   }
 }
 
-export class MessageOptionClass {
+export class MessageOptionSchema {
   @prop({ type: () => String, default: null })
   public content?: string;
 
@@ -117,7 +110,7 @@ export interface UpdateQueryMessageOption {
   author?: { name?: string | null; iconURL?: string | null };
 }
 
-export const Setting = getModelForClass(SettingClass, {
+export const Setting = getModelForClass(SettingSchema, {
   options: { customName: "Settings" },
   schemaOptions: { validateBeforeSave: true },
 });

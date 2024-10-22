@@ -9,20 +9,13 @@ export default new NeetEvent<"interactionCreate">({
   run: async (interaction) => {
     if (!interaction.isButton()) return;
     const client = interaction.client as Neet;
-    client.emit("cl-debug", `Received a button interaction.`);
+    const parsed = parseId(interaction.customId)
 
-    const parsed = parseId(interaction.customId);
-
-    client.emit(
-      "cl-debug",
-      `Received button interaction: ${parsed.id}/${parsed.sub_id}`,
-    );
+    client.emit("cl-debug", `[INTERACTION] Button >> (${parsed.id}/${parsed.sub_id}).`);
 
     try {
-      client.emit("cl-debug", `Handing button interaction.`);
-      (
-        await import(`../application/buttons/${parsed.id}/${parsed.sub_id}`)
-      ).run(interaction, parsed.args);
+      (await import(`../application/buttons/${parsed.id}/${parsed.sub_id}`))
+      .run(interaction, parsed.args);
     } catch (error) {
       writeError("ButtonCreate", error);
     }

@@ -9,12 +9,7 @@ export default new NeetEvent<"guildMemberAdd">({
   run: async (member) => {
     const { guild, user } = member;
     const data = await Setting.findOne({ guildId: guild.id });
-    if (
-      !data ||
-      data.welcome?.enabled != true ||
-      typeof data.welcome?.channelId != "string"
-    )
-      return;
+    if (!data || data.welcome?.enabled != true || typeof data.welcome?.channelId != "string") return;
 
     const image = new CanvaBuilder({ template: Templates.WelcomeDefault }).set({
       username: user.username,

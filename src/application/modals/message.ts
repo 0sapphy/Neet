@@ -42,7 +42,7 @@ export async function run(
     },
   };
 
-  await Setting[module === "welcome" ? "UPDATEWelcome" : "UPDATEFarewell"](
+  await Setting[module === "welcome" ? "UpdateWelcome" : "UpdateFarewell"](
     interaction.guildId,
     data,
   );

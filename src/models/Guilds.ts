@@ -1,6 +1,5 @@
 import { getModelForClass, prop, ReturnModelType } from "@typegoose/typegoose";
 import { FilterOutFunctionKeys } from "@typegoose/typegoose/lib/types";
-import { UpdateQuery, QueryOptions } from "mongoose";
 import { randomUUID } from "node:crypto";
 
 export class GuildClass {
@@ -10,35 +9,7 @@ export class GuildClass {
   @prop({ type: () => [ModerationCaseClass] })
   cases?: ModerationCaseClass[];
 
-  public static async GET(
-    this: ReturnModelType<typeof GuildClass>,
-    guildId: string,
-    upsert?: boolean,
-  ) {
-    if (upsert === undefined) upsert = false;
-    let data;
-    data = await this.findOne({ guildId });
-    if (!data && upsert === true) {
-      data = await this.create({ guildId });
-      await data.save();
-    }
-
-    return data;
-  }
-
-  public static async UPDATE(
-    this: ReturnModelType<typeof GuildClass>,
-    guildId: string,
-    update: UpdateQuery<GuildClass>,
-    options?: QueryOptions<GuildClass> & {
-      includeResultMetadata: true;
-      lean: true;
-    },
-  ): Promise<GuildClass | null> {
-    return await this.findOneAndUpdate({ guildId }, update, options);
-  }
-
-  public static async RESET(
+  public static async deleteAndCreate(
     this: ReturnModelType<typeof GuildClass>,
     guildId: string,
     create?: boolean,
@@ -53,7 +24,7 @@ export class GuildClass {
     return data;
   }
 
-  public static async CREATEcase(
+  public static async createCase(
     this: ReturnModelType<typeof GuildClass>,
     guildId: string,
     caseInfo: FilterOutFunctionKeys<ModerationCaseClass>,
@@ -67,7 +38,7 @@ export class GuildClass {
     );
   }
 
-  public static async GETcasesForUser(
+  public static async getUserCases(
     this: ReturnModelType<typeof GuildClass>,
     guildId: string,
     userId: string,
@@ -79,7 +50,7 @@ export class GuildClass {
     return cases;
   }
 
-  public static async GETcasesFiltered(
+  public static async getCases(
     this: ReturnModelType<typeof GuildClass>,
     guildId: string,
     filterBy: string,

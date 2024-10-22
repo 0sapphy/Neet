@@ -7,21 +7,16 @@ export default new NeetEvent<"interactionCreate">({
   run: async (interaction) => {
     if (!interaction.isModalSubmit()) return;
     const client = interaction.client as Neet;
-    client.emit("cl-debug", "Recieved modal interaction.");
     const parsed = parseId(interaction.customId);
 
-    if (componentGetBoolean(parsed.args, "use>id") === true) {
-      (await import(`../application/modals/${parsed.id}`)).run(
-        interaction,
-        parsed.args,
-      );
-      return;
-    }
+    client.emit("cl-debug", `[INTERACTION] >> ModalSubmit (${parsed.id}).`)
 
-    (await import(`../application/modals/${parsed.id}/`)).run(
-      interaction,
-      parsed.args,
-    );
-    return;
+    if (componentGetBoolean(parsed.args, "use>id") === true) {
+      (await import(`../application/modals/${parsed.id}`))
+        .run(interaction, parsed.args);
+    }
+    
+    (await import(`../application/modals/${parsed.id}/${parsed.sub_id}`))
+      .run(interaction, parsed.args);
   },
 });

@@ -1,9 +1,7 @@
-import process from "node:process";
-import { Neet } from "../lib";
-import { writeError } from "./helpers/logger";
-
 process.loadEnvFile(".env");
 
+import { Neet } from "../lib";
+import { writeError } from "./helpers/logger";
 import { Database } from "./helpers/databaseHandler";
 import { Event } from "./helpers/eventHandler";
 import { Command } from "./helpers/commandHandler";
@@ -13,7 +11,7 @@ const client = new Neet({
   shards: "auto",
 });
 
-process.on("unhandledRejection", (reason, promise) => {
+process.on("unhandledRejection", ($, promise) => {
   writeError("handledRejection", promise);
 });
 
@@ -21,8 +19,9 @@ process.on("uncaughtException", (error) => {
   writeError("caughtException", error);
 });
 
-async function main() {
+async function Main() {
   try {
+    // Load all the handlers.
     Database();
     Event(client);
     Command(client);
@@ -34,4 +33,4 @@ async function main() {
   }
 }
 
-void main();
+void Main();

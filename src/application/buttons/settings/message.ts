@@ -10,11 +10,11 @@ import {
   TextInputStyle,
 } from "discord.js";
 import { Arguments, componentGetString, customId } from "../../../../lib";
-import { commandUserOnly } from "../../../helpers/utils";
+import { isCommandUser } from "../../../helpers/utils";
 import { Setting } from "../../../models/Settings";
 
 export async function run(interaction: ButtonInteraction, args: Arguments[]) {
-  if (commandUserOnly(interaction)) return;
+  if (!isCommandUser(interaction)) return;
 
   const module = componentGetString(args, "for");
   if (!module) return; // WNE*

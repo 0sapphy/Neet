@@ -9,7 +9,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import {
-  commandUserOnly,
+  isCommandUser,
   emoji,
   reverse,
   status,
@@ -17,7 +17,7 @@ import {
 import { Setting } from "../../../../models/Settings";
 
 export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
-  if (commandUserOnly(interaction)) return;
+  if (!isCommandUser(interaction)) return;
 
   const {
     guildId,
@@ -27,7 +27,7 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
   await interaction.deferReply({ ephemeral: true });
 
   const channelId = values[0];
-  const data = await Setting.UPDATEFarewell(guildId, { channelId });
+  const data = await Setting.UpdateFarewell(guildId, { channelId });
 
   const embed = EmbedBuilder.from(embeds[0]).setDescription(
     `**»** **Status »»»** ${status(data?.enabled)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,
@@ -43,6 +43,7 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
 
   const statusButton = ActionRowBuilder.from(components[1]).setComponents(
     ButtonBuilder.from(components[1].components[0] as APIButtonComponent),
+    ButtonBuilder.from(components[1].components[1] as APIButtonComponent),
   ) as ActionRowBuilder<ButtonBuilder>;
 
   await interaction.message.edit({

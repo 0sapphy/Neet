@@ -71,7 +71,7 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   try {
     await member.kick(reason);
 
-    await Guild.CREATEcase(interaction.guildId, {
+    await Guild.createCase(interaction.guildId, {
       userId: member.id,
       moderatorId: interaction.user.id,
       actionType: ModerationCaseActions.Kick,

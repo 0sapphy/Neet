@@ -9,7 +9,7 @@ import {
   APIButtonComponent,
 } from "discord.js";
 import {
-  commandUserOnly,
+  isCommandUser,
   emoji,
   reverse,
   status,
@@ -17,7 +17,7 @@ import {
 import { Setting } from "../../../../models/Settings";
 
 export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
-  if (commandUserOnly(interaction)) return;
+  if (!isCommandUser(interaction)) return;
 
   const {
     guildId,
@@ -27,7 +27,7 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
   await interaction.deferReply({ ephemeral: true });
 
   const channelId = values[0];
-  const data = await Setting.UPDATEWelcome(guildId, { channelId });
+  const data = await Setting.UpdateWelcome(guildId, { channelId });
 
   const embed = EmbedBuilder.from(embeds[0])
     .setDescription(

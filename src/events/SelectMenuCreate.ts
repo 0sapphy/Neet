@@ -6,21 +6,14 @@ export default new NeetEvent<"interactionCreate">({
   name: Events.InteractionCreate,
   once: false,
   run: async (interaction) => {
-    if (!interaction.isAnySelectMenu()) return;
-    const client = interaction.client as Neet;
-    client.emit("cl-debug", "Recieved selectMenu interaction.");
-
     if (interaction.isChannelSelectMenu()) {
+      const client = interaction.client as Neet;
       const parsed = parseId(interaction.customId);
 
       try {
-        client.emit("cl-debug", `Handing channelSelectMenu interaction.`);
-
-        (
-          await import(
-            `../application/selectMenu/channel/${parsed.id}/${parsed.sub_id}`
-          )
-        ).run(interaction, parsed.args);
+        client.emit("cl-debug", `[INTERACTION] >> ChannelSelectMenu (${parsed.id}).`);
+        (await import(`../application/selectMenu/channel/${parsed.id}/${parsed.sub_id}`))
+        .run(interaction, parsed.args);
       } catch (error) {
         writeError("ChannelSelect", error);
       }

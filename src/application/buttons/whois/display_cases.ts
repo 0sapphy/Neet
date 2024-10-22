@@ -22,7 +22,7 @@ export async function run(
   const userId = componentGetString(parameters, "userId");
   if (!userId) return; // WNE*
 
-  const data = await Guild.GETcasesForUser(interaction.guildId, userId);
+  const data = await Guild.getUserCases(interaction.guildId, userId);
 
   if (!data) {
     return interaction.editReply({

@@ -9,12 +9,7 @@ export default new NeetEvent<"guildMemberRemove">({
   run: async (member) => {
     const { guild, user } = member;
     const data = await Setting.findOne({ guildId: guild.id });
-    if (
-      !data ||
-      data.farewell?.enabled != true ||
-      typeof data.farewell.channelId != "string"
-    )
-      return;
+    if (!data || data.farewell?.enabled != true || typeof data.farewell.channelId != "string") return;
 
     const image = new CanvaBuilder({ template: Templates.FarewellDefault }).set(
       {
