@@ -1,26 +1,28 @@
 process.loadEnvFile(".env");
 
 import { Neet } from "../lib";
-import { writeError } from "./helpers/logger";
 import { Database } from "./helpers/databaseHandler";
 import { Event } from "./helpers/eventHandler";
 import { Command } from "./helpers/commandHandler";
+import signale from "signale";
 
 const client = new Neet({
   intents: ["Guilds", "GuildMembers", "GuildMessages", "MessageContent"],
-  shards: "auto",
+  shards: "auto"
 });
 
 process.on("unhandledRejection", ($, promise) => {
-  writeError("handledRejection", promise);
+  signale.error("unhandledRejection", promise);
 });
 
 process.on("uncaughtException", (error) => {
-  writeError("caughtException", error);
+  signale.error("uncaughtException", error);
 });
 
 async function Main() {
   try {
+    signale.start({ prefix: "[HANDLERS]", message: `Loading ALL the handlers.` });
+
     // Load all the handlers.
     Database();
     Event(client);
@@ -28,7 +30,7 @@ async function Main() {
 
     await client.login(process.env.TOKEN);
   } catch (error) {
-    writeError("Client Login Error", error);
+    signale.error(`Login / Handler error`, error);
     await client.destroy();
   }
 }

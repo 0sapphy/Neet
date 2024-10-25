@@ -1,8 +1,8 @@
 import { Events } from "discord.js";
 import { Neet, NeetEvent } from "../../lib";
 import { CommandRunType } from "../../lib/Types/enum";
-import { writeWarn } from "../helpers/logger";
 import { createWarningEmbed } from "../helpers/utils";
+import signale from "signale";
 
 export default new NeetEvent<"interactionCreate">({
   name: Events.InteractionCreate,
@@ -59,7 +59,7 @@ export default new NeetEvent<"interactionCreate">({
 
     if (context.handler.run_type === CommandRunType.THIS) {
       if (!context.run) {
-        writeWarn(`Missing "run" at command: ${context.data.name}`);
+        signale.warn(`Missing "run" at command: ${context.data.name}`);
         return;
       }
 

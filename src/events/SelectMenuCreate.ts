@@ -1,6 +1,6 @@
 import { Events } from "discord.js";
 import { Neet, NeetEvent, parseId } from "../../lib";
-import { writeError } from "../helpers/logger";
+import signale from "signale";
 
 export default new NeetEvent<"interactionCreate">({
   name: Events.InteractionCreate,
@@ -15,7 +15,7 @@ export default new NeetEvent<"interactionCreate">({
         (await import(`../application/selectMenu/channel/${parsed.id}/${parsed.sub_id}`))
         .run(interaction, parsed.args);
       } catch (error) {
-        writeError("ChannelSelect", error);
+        signale.error("ChannelSelect error", error);
       }
     }
   },

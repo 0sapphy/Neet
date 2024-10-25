@@ -8,8 +8,8 @@ import {
 import { NeetCommandBuilder } from "../../../lib";
 import { CommandMode, CommandRunType } from "../../../lib/Types/enum";
 import { emoji } from "../../helpers/utils";
-import { writeError, writeWarn } from "../../helpers/logger";
 import { Guild, ModerationCaseActions } from "../../models/Guilds";
+import signale from "signale";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { options } = interaction;
@@ -99,7 +99,7 @@ async function BanMember(
 
   await member
     .send({ embeds: [DMEmbed] })
-    .catch((reason) => writeWarn("BanMember Warn", reason.rawError.message));
+    .catch((reason) => signale.warn(reason.rawError.message));
 
   try {
     await interaction.guild.bans.create(member, {
@@ -113,7 +113,7 @@ async function BanMember(
       reason: options.reason,
     });
   } catch (error) {
-    writeError("BanMember Error", error);
+    signale.error("BanMember error", error);
   } finally {
     const embed = new EmbedBuilder()
       .setDescription(

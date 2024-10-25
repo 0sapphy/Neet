@@ -1,7 +1,7 @@
 import { Events } from "discord.js";
 import { NeetEvent, Neet } from "../../lib";
 import { parseId } from "../../lib";
-import { writeError } from "../helpers/logger";
+import signale from "signale";
 
 export default new NeetEvent<"interactionCreate">({
   name: Events.InteractionCreate,
@@ -17,7 +17,7 @@ export default new NeetEvent<"interactionCreate">({
       (await import(`../application/buttons/${parsed.id}/${parsed.sub_id}`))
       .run(interaction, parsed.args);
     } catch (error) {
-      writeError("ButtonCreate", error);
+      signale.error("ButtonCreate error", error);
     }
   },
 });

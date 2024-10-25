@@ -1,8 +1,8 @@
 import { Neet } from "../../lib";
 import { readdir } from "node:fs/promises";
-import { writeInfo } from "./logger";
 import { INeetCommand } from "../../lib/Types/neet";
 import { CommandRunType } from "../../lib/Types/enum";
+import signale from "signale";
 
 export async function Command(client: Neet) {
   const files = await readdir("./src/application/commands/");
@@ -28,5 +28,5 @@ export async function Command(client: Neet) {
     amount++;
   }
 
-  writeInfo(`Loaded ${amount} commands.`);
+  signale.complete({ prefix: "[HANDLERS]", message: `Loaded ${amount} commands.` });
 }
