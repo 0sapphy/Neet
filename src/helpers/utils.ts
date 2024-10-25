@@ -1,4 +1,4 @@
-import emojis from "../../scripts/emojis.json";
+import emojis from "../../icons.json";
 import {
   AnySelectMenuInteraction,
   ButtonInteraction,
@@ -15,11 +15,11 @@ import {
  * Returns a string or an ApplicationEmoji Object.
  */
 export function emoji(
-  name: keyof typeof emojis,
+  name: string,
   raw = false,
 ): string | typeof emoji {
-  const emoji = emojis[name];
-  return raw ? emoji : formatEmoji(emoji.id, emoji.animated);
+  const emoji = emojis.find(E => E.name === name);
+  return raw ? emoji : formatEmoji(emoji!.id, emoji!.animated);
 }
 
 /**
