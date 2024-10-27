@@ -16,13 +16,6 @@
   "terminal.integrated.tabs.defaultColor": "terminal.ansiRed",
   "terminal.integrated.cursorStyle": "underline",
 
-  // Formatting
-  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
-  "files.autoSave": "onFocusChange",
-  "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file",
-  "javascript.format.semicolons": "ignore",
-
   // Better Comments
   "better-comments.tags": [
     {

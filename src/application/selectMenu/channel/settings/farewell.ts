@@ -1,17 +1,24 @@
 import {
   ActionRowBuilder,
-  ChannelSelectMenuBuilder,
-  channelMention,
-  ChannelSelectMenuInteraction,
-  EmbedBuilder,
+  APIButtonComponent,
   APIChannelSelectComponent,
   ButtonBuilder,
-  APIButtonComponent,
+  channelMention,
+  ChannelSelectMenuBuilder,
+  ChannelSelectMenuInteraction,
+  EmbedBuilder,
 } from "discord.js";
-import { updateWelcome } from "../../../../helpers/database";
-import { emoji, reverse, status } from "../../../../helpers/utils";
+import {
+  isCommandUser,
+  emoji,
+  reverse,
+  status,
+} from "../../../../helpers/utils";
+import { Setting } from "../../../../models/Settings";
 
 export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
+  if (!isCommandUser(interaction)) return;
+
   const {
     guildId,
     values,
@@ -20,24 +27,23 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
   await interaction.deferReply({ ephemeral: true });
 
   const channelId = values[0];
-  const data = await updateWelcome(guildId, { channelId });
+  const data = await Setting.UpdateFarewell(guildId, { channelId });
 
-  const embed = EmbedBuilder.from(embeds[0])
-    .setDescription(
-      `**»** **Status »»»** ${status(data?.enabled)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,
-    )
-    .setColor(data?.enabled ? "Blurple" : "Orange");
+  const embed = EmbedBuilder.from(embeds[0]).setDescription(
+    `**»** **Status »»»** ${status(data?.enabled)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`,
+  );
 
   const channelSelect = ActionRowBuilder.from(components[0]).setComponents(
     ChannelSelectMenuBuilder.from(
       components[0].components[0] as unknown as APIChannelSelectComponent,
     )
       .setDisabled(reverse(data?.enabled))
-      .addDefaultChannels([channelId]),
+      .setDefaultChannels([channelId]),
   ) as ActionRowBuilder<ChannelSelectMenuBuilder>;
 
   const statusButton = ActionRowBuilder.from(components[1]).setComponents(
     ButtonBuilder.from(components[1].components[0] as APIButtonComponent),
+    ButtonBuilder.from(components[1].components[1] as APIButtonComponent),
   ) as ActionRowBuilder<ButtonBuilder>;
 
   await interaction.message.edit({
@@ -45,5 +51,5 @@ export async function run(interaction: ChannelSelectMenuInteraction<"cached">) {
     components: [channelSelect, statusButton],
   });
 
-  return await interaction.editReply(`${emoji("Checkmark")} | Saved Settings!`);
+  return await interaction.editReply(`${emoji("Checkmark")} | Saved Settings.`);
 }

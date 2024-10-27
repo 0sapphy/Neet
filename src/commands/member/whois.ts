@@ -6,9 +6,8 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import { emoji } from "../../helpers/utils";
-import { getCases } from "../../helpers/database";
-import { NeetButton } from "../../../lib";
-import { EnumModerationCaseFilterProperties } from "../../models/Guilds";
+import { customId } from "../../../lib";
+import { Guild } from "../../models/Guilds";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   await interaction.deferReply();
@@ -52,34 +51,27 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
     ack = true;
   }
 
-  const cases = await getCases(
-    interaction.guildId,
-    EnumModerationCaseFilterProperties.userId,
-    user.id,
-  );
+  if (interaction.member.permissions.has("ModerateMembers")) {
+    const cases = await Guild.getUserCases(interaction.guildId, user.id);
 
-  if (
-    cases != false &&
-    cases.length > 0 &&
-    interaction.member.permissions.has("ModerateMembers")
-  ) {
-    const customId = NeetButton.generateId(
-      "whois",
-      "display_cases",
-    ).setParameters([{ name: "user", value: user.id }]);
+    if (cases != false && cases.length > 0) {
+      const caseBTNId = customId("whois", "display_cases", [
+        { name: "user", value: user.id },
+      ]);
 
-    const CaseButtonActionRow =
-      new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder()
-          .setCustomId(customId)
-          .setLabel("Moderation Cases")
-          .setStyle(ButtonStyle.Danger),
-      );
+      const CaseButtonActionRow =
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId(caseBTNId)
+            .setLabel("Moderation Cases")
+            .setStyle(ButtonStyle.Danger),
+        );
 
-    return interaction.editReply({
-      embeds: [embed],
-      components: [CaseButtonActionRow],
-    });
+      return interaction.editReply({
+        embeds: [embed],
+        components: [CaseButtonActionRow],
+      });
+    }
   }
 
   return interaction.editReply({ embeds: [embed] });

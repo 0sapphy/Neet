@@ -6,9 +6,8 @@ import {
 import { NeetCommandBuilder } from "../../../lib";
 import { CommandMode, CommandRunType } from "../../../lib/Types/enum";
 import { emoji } from "../../helpers/utils";
-import { writeError, writeWarn } from "../../helpers/logger";
-import { createCase } from "../../helpers/database";
-import { ActionTypes } from "../../../lib/Types/database";
+import { Guild, ModerationCaseActions } from "../../models/Guilds";
+import signale from "signale";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { options } = interaction;
@@ -67,22 +66,19 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
 
   await member
     .send({ embeds: [DMEmbed] })
-    .catch((warn) => writeWarn("KickMember Warn", warn.rawError.message));
+    .catch((warn) => signale.warn(warn.rawError.message));
 
   try {
     await member.kick(reason);
 
-    await createCase(
-      { guildId: interaction.guildId },
-      {
-        userId: member.id,
-        moderatorId: interaction.user.id,
-        actionType: ActionTypes.KICK,
-        reason,
-      },
-    );
+    await Guild.createCase(interaction.guildId, {
+      userId: member.id,
+      moderatorId: interaction.user.id,
+      actionType: ModerationCaseActions.Kick,
+      reason,
+    });
   } catch (error) {
-    writeError("KickMember Error", error);
+    signale.error("KickMember error", error);
   } finally {
     const embed = new EmbedBuilder()
       .setDescription(`${emoji("Checkmark")} | Kicked ${member} | ${reason}`)

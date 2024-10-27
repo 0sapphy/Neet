@@ -1,15 +1,9 @@
 import mongoose from "mongoose";
-import { writeInfo, writeError } from "./logger";
+import signale from "signale";
 
 export function Database() {
-  writeInfo("Connecting to MongoDB...");
-
-  try {
-    mongoose
-      .connect(process.env.DATABASE)
-      .then(() => writeInfo("Connected to MongoDB."))
-      .catch((_r: Error) => writeError("Error connecting to MongoDB", _r));
-  } catch (error) {
-    writeError("MongoDB Error", error);
-  }
+  mongoose
+  .connect(process.env.DATABASE)
+  .then(() => signale.complete({ prefix: "[HANDLERS]", message: "Connected to mongodb." }))
+  .catch((_r: Error) => signale.error({ prefix: "[HANDLERS]", message: `Error handling mongodb connection. ${_r}` }));
 }

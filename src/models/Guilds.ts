@@ -1,64 +1,100 @@
-import mongoose from "mongoose";
-import { ActionTypes } from "../../lib/Types/database";
+import { getModelForClass, prop, ReturnModelType } from "@typegoose/typegoose";
+import { FilterOutFunctionKeys } from "@typegoose/typegoose/lib/types";
+import { randomUUID } from "node:crypto";
 
-const GuildCases = new mongoose.Schema({
-  userId: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-  },
+export class GuildClass {
+  @prop({ required: true })
+  public guildId!: string;
 
-  moderatorId: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-  },
+  @prop({ type: () => [ModerationCaseClass] })
+  cases?: ModerationCaseClass[];
 
-  caseId: {
-    type: mongoose.SchemaTypes.String,
-    required: true,
-  },
+  public static async deleteAndCreate(
+    this: ReturnModelType<typeof GuildClass>,
+    guildId: string,
+    create?: boolean,
+  ) {
+    if (create === undefined) create = true;
+    let data;
+    data = await this.deleteOne({ guildId });
+    if (data.acknowledged && create === true) {
+      data = await this.create({ guildId });
+      await data.save();
+    }
+    return data;
+  }
 
-  actionType: {
-    type: mongoose.SchemaTypes.Number,
-    required: true,
-  },
+  public static async createCase(
+    this: ReturnModelType<typeof GuildClass>,
+    guildId: string,
+    caseInfo: FilterOutFunctionKeys<ModerationCaseClass>,
+    upsert?: boolean,
+  ) {
+    if (upsert === undefined) upsert = false;
+    return this.findOneAndUpdate(
+      { guildId },
+      { $push: { cases: [caseInfo] } },
+      { upsert, new: true },
+    );
+  }
 
-  reason: {
-    type: mongoose.SchemaTypes.String,
-    default: "No Reason Provided",
-  },
-});
+  public static async getUserCases(
+    this: ReturnModelType<typeof GuildClass>,
+    guildId: string,
+    userId: string,
+  ): Promise<ModerationCaseClass[] | false> {
+    const guild = await this.findOne({ guildId });
+    if (!guild || !guild.cases) return false;
+    const cases = guild.cases.filter((_case) => _case.userId === userId);
+    if (cases === undefined) return false;
+    return cases;
+  }
 
-export default mongoose.model(
-  "Guilds",
-  new mongoose.Schema({
-    guildId: {
-      type: mongoose.SchemaTypes.String,
-      unique: true,
-      required: true,
-    },
-
-    cases: {
-      type: [GuildCases],
-      default: [],
-    },
-  }),
-);
-
-export interface IGuild {
-  guildId: string;
-  cases: IModerationCase[] | never[];
+  public static async getCases(
+    this: ReturnModelType<typeof GuildClass>,
+    guildId: string,
+    filterBy: string,
+    eqto: ModerationCaseFilters,
+  ): Promise<ModerationCaseClass[] | false> {
+    const guild = await this.findOne({ guildId });
+    if (!guild || !guild.cases) return false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cases = guild.cases.filter(($: any) => $[filterBy] === eqto);
+    if (cases === undefined) return false;
+    return cases;
+  }
 }
 
-export interface IModerationCase {
-  userId: string;
-  moderatorId: string;
-  caseId?: string;
-  actionType: ActionTypes;
-  reason?: string;
+export class ModerationCaseClass {
+  @prop({ required: true })
+  public userId!: string;
+
+  @prop({ required: true })
+  public moderatorId!: string;
+
+  @prop({ default: randomUUID() })
+  public caseId?: string;
+
+  @prop({ type: () => String, required: true })
+  public actionType!: string;
+
+  @prop({ default: "No Reason Provided." })
+  public reason?: string;
 }
 
-export enum EnumModerationCaseFilterProperties {
+export enum ModerationCaseActions {
+  Ban = "ban",
+  Kick = "kick",
+  Warn = "warn",
+}
+
+enum ModerationCaseFilters {
   userId = "userId",
   moderatorId = "moderatorId",
   caseId = "caseId",
 }
+
+export const Guild = getModelForClass(GuildClass, {
+  options: { customName: "Guild" },
+  schemaOptions: { validateBeforeSave: true },
+});

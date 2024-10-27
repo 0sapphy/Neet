@@ -16,21 +16,18 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { guildId, guild } = interaction;
   await interaction.deferReply();
 
-  let data = await Setting.findOne({ guildId: guildId });
+  let data;
+  data = await Setting.findOne({ guildId });
   if (!data) {
     data = await Setting.create({ guildId });
-    data.save();
-  }
-
-  if (!data) {
-    return interaction.editReply("[ERROR]: DB Error.");
+    await data.save();
   }
 
   const embed = new EmbedBuilder()
     .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
-    .setTitle("Configure Welcome Settings")
+    .setTitle("Configure Farewell Settings")
     .setDescription(
-      `**»** **Status »»»** ${status(data.welcome?.enabled)}\n**»** **Channel »»»** ${data.welcome?.channelId ? channelMention(data.welcome.channelId) : "None"}`,
+      `**»** **Status »»»** ${status(data.farewell?.enabled)}\n**»** **Channel »»»** ${data.farewell?.channelId ? channelMention(data.farewell.channelId) : "None"}`,
     )
     .setColor("Blurple")
     .setTimestamp();
@@ -38,35 +35,35 @@ export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const channelSelect =
     new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
       new ChannelSelectMenuBuilder()
-        .setCustomId(customId("settings", "welcome"))
+        .setCustomId(customId("settings", "farewell"))
         .setChannelTypes([ChannelType.GuildText])
-        .setMaxValues(1)
-        .setDisabled(reverse(data.welcome?.enabled)),
+        .setDisabled(reverse(data.farewell?.enabled))
+        .setMaxValues(1),
     );
 
-  const buttonId = customId("settings", "welcome", [
-    { name: "to", value: `${reverse(data.welcome?.enabled)}` },
+  const buttonId = customId("settings", "farewell", [
+    { name: "to", value: `${reverse(data.farewell?.enabled)}` },
   ]);
 
-  const settingButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  const statusButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId(buttonId)
-      .setLabel(status(data.welcome?.enabled, true))
+      .setLabel(status(data.farewell?.enabled, true))
       .setStyle(
-        data.welcome?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
+        data.farewell?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
       ),
 
     new ButtonBuilder()
       .setCustomId(
-        customId("settings", "message", [{ name: "for", value: "welcome" }]),
+        customId("settings", "message", [{ name: "for", value: "farewell" }]),
       )
       .setLabel("Message Options")
       .setStyle(ButtonStyle.Primary)
-      .setDisabled(reverse(data.welcome?.enabled)),
+      .setDisabled(reverse(data.farewell?.enabled)),
   );
 
   return await interaction.editReply({
     embeds: [embed],
-    components: [channelSelect, settingButtons],
+    components: [channelSelect, statusButton],
   });
 }

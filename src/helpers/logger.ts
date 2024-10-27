@@ -36,7 +36,7 @@ export function writeWarn(message: string, ...args: unknown[]) {
   );
 }
 
-export function writeError(message: string, error: Error | any) {
+export function writeError(message: string, error: Error | unknown) {
   console.error(
     style.white(getDate()),
     style.bold(style.red("[ERROR]")),
