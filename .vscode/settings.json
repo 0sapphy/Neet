@@ -4,7 +4,7 @@
   "breadcrumbs.enabled": false,
   "explorer.decorations.badges": false,
   "workbench.activityBar.location": "default",
-  "workbench.colorTheme": "GitHub Dark",
+  "workbench.colorTheme": "Dark Low Contrast Cold",
   "workbench.statusBar.visible": false,
   "outline.problems.enabled": false,
   "editor.minimap.enabled": false,
