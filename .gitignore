@@ -1,6 +1,5 @@
 .ignore
 __test.ts
-deno.lock
 
 # Logs
 logs

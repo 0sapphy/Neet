@@ -11,8 +11,7 @@
   "tasks": {
     "fmt": "deno fmt",
     "lint": "deno lint",
-    "start": "deno -A src/index.ts",
-    "cache": "deno cache ./src/index.ts"
+    "start": "deno -A src/index.ts"
   },
 
   "imports": {
