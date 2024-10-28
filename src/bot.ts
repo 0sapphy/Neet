@@ -11,8 +11,8 @@ const client = new Neet({
   shards: "auto"
 });
 
-process.on("unhandledRejection", ($, promise) => {
-  signale.error("unhandledRejection", promise);
+process.on("unhandledRejection", ($) => {
+  signale.error("unhandledRejection", $);
 });
 
 process.on("uncaughtException", (error) => {

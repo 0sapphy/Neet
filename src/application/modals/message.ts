@@ -1,24 +1,19 @@
 import { EmbedBuilder, ModalSubmitInteraction } from "discord.js";
 import { Setting, UpdateQueryAnyGreeting } from "../../models/Settings";
-import { Arguments, componentGetString } from "../../../lib";
+import { Option } from "../../../lib";
 import { emoji } from "../../helpers/utils";
 
 export async function run(
   interaction: ModalSubmitInteraction<"cached">,
-  args: Arguments[],
+  args: object,
 ) {
   const { fields, user } = interaction;
-  const module = componentGetString(args, "for");
+  const module = Option.getString(args, "for");
 
   const content = fields.getTextInputValue("content");
-
   const authorName = nullIfEmptyString(fields.getTextInputValue("author_name"));
-
   const authorIcon = nullIfEmptyString(fields.getTextInputValue("author_icon"));
-
-  const description = nullIfEmptyString(
-    fields.getTextInputValue("description"),
-  );
+  const description = nullIfEmptyString(fields.getTextInputValue("description"));
 
   // Validate author options.
   if ((authorName && !authorIcon) || (authorIcon && !authorName)) {

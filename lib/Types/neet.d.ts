@@ -16,6 +16,15 @@ export interface INeetEvent<N = void> {
   run: (...args: ClientEvents[N]) => void;
 }
 
+// Parser 
+
+export interface IParsed {
+  I?: string | boolean | number;
+  S?: string | boolean | number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  A?: any;
+}
+
 // Command Types.
 
 export interface IRawAPICommandData {

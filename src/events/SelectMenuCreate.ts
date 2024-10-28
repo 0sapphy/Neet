@@ -1,5 +1,5 @@
 import { Events } from "discord.js";
-import { Neet, NeetEvent, parseId } from "../../lib";
+import { CompileArguments, Neet, NeetEvent, Parse } from "../../lib";
 import signale from "signale";
 
 export default new NeetEvent<"interactionCreate">({
@@ -8,12 +8,14 @@ export default new NeetEvent<"interactionCreate">({
   run: async (interaction) => {
     if (interaction.isChannelSelectMenu()) {
       const client = interaction.client as Neet;
-      const parsed = parseId(interaction.customId);
+      const parsed = Parse(interaction.customId);
+      const args = CompileArguments(parsed);
+      
+      client.emit("cl-debug", `[INTERACTION] >> ChannelSelectMenu (${parsed.I}).`);
 
       try {
-        client.emit("cl-debug", `[INTERACTION] >> ChannelSelectMenu (${parsed.id}).`);
-        (await import(`../application/selectMenu/channel/${parsed.id}/${parsed.sub_id}`))
-        .run(interaction, parsed.args);
+        (await import(`../application/selectMenu/channel/${parsed.I}${parsed.S ? `/${parsed.S}` : ""}`))
+        .run(interaction, args);
       } catch (error) {
         signale.error("ChannelSelect error", error);
       }

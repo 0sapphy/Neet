@@ -1,6 +1,6 @@
 import { Events } from "discord.js";
-import { NeetEvent, Neet } from "../../lib";
-import { parseId } from "../../lib";
+import { NeetEvent, Neet, CompileArguments } from "../../lib";
+import { Parse } from "../../lib";
 import signale from "signale";
 
 export default new NeetEvent<"interactionCreate">({
@@ -9,13 +9,14 @@ export default new NeetEvent<"interactionCreate">({
   run: async (interaction) => {
     if (!interaction.isButton()) return;
     const client = interaction.client as Neet;
-    const parsed = parseId(interaction.customId)
+    const parsed = Parse(interaction.customId);
+    const args = CompileArguments(parsed)
 
-    client.emit("cl-debug", `[INTERACTION] Button >> (${parsed.id}/${parsed.sub_id}).`);
+    client.emit("cl-debug", `[INTERACTION] Button >> (${parsed.I}/${parsed.S}).`);
 
     try {
-      (await import(`../application/buttons/${parsed.id}/${parsed.sub_id}`))
-      .run(interaction, parsed.args);
+      (await import(`../application/buttons/${parsed.I}${parsed.S ? `/${parsed.S}` : ""}`))
+      .run(interaction, args);
     } catch (error) {
       signale.error("ButtonCreate error", error);
     }

@@ -14,11 +14,9 @@ import {
  * Get an emoji from emojis.json.
  * Returns a string or an ApplicationEmoji Object.
  */
-export function emoji(
-  name: string,
-  raw = false,
-): string | typeof emoji {
+export function emoji(name: string, raw = false): string | typeof emoji {
   const emoji = emojis.find(E => E.name === name);
+  console.log(name, emoji, emojis);
   return raw ? emoji : formatEmoji(emoji!.id, emoji!.animated);
 }
 

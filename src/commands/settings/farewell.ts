@@ -10,60 +10,45 @@ import {
 } from "discord.js";
 import { Setting } from "../../models/Settings";
 import { reverse, status } from "../../helpers/utils";
-import { customId } from "../../../lib";
+import { createId } from "../../../lib";
 
 export async function run(interaction: ChatInputCommandInteraction<"cached">) {
   const { guildId, guild } = interaction;
   await interaction.deferReply();
 
-  let data;
-  data = await Setting.findOne({ guildId });
-  if (!data) {
-    data = await Setting.create({ guildId });
-    await data.save();
-  }
+  const data = (await Setting.GetOrCreate(guildId)).farewell;
 
   const embed = new EmbedBuilder()
     .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
     .setTitle("Configure Farewell Settings")
-    .setDescription(
-      `**»** **Status »»»** ${status(data.farewell?.enabled)}\n**»** **Channel »»»** ${data.farewell?.channelId ? channelMention(data.farewell.channelId) : "None"}`,
-    )
+    .setDescription(`**»** **Status »»»** ${status(data?.enabled)}\n**»** **Channel »»»** ${data?.channelId ? channelMention(data.channelId) : "None"}`)
     .setColor("Blurple")
     .setTimestamp();
 
   const channelSelect =
     new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
       new ChannelSelectMenuBuilder()
-        .setCustomId(customId("settings", "farewell"))
+        .setCustomId(createId("settings", "farewell"))
         .setChannelTypes([ChannelType.GuildText])
-        .setDisabled(reverse(data.farewell?.enabled))
+        .setDisabled(reverse(data?.enabled))
         .setMaxValues(1),
     );
 
-  const buttonId = customId("settings", "farewell", [
-    { name: "to", value: `${reverse(data.farewell?.enabled)}` },
-  ]);
-
-  const statusButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
-      .setCustomId(buttonId)
-      .setLabel(status(data.farewell?.enabled, true))
-      .setStyle(
-        data.farewell?.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
-      ),
+      .setCustomId(createId("settings", "farewell", [{ K: "to", V: reverse(data?.enabled)} ]))
+      .setLabel(status(data?.enabled, true))
+      .setStyle(data?.enabled ? ButtonStyle.Danger : ButtonStyle.Success),
 
     new ButtonBuilder()
-      .setCustomId(
-        customId("settings", "message", [{ name: "for", value: "farewell" }]),
-      )
+      .setCustomId(createId("settings", "message", [{ K: "for", V: "farewell" }]))
       .setLabel("Message Options")
       .setStyle(ButtonStyle.Primary)
-      .setDisabled(reverse(data.farewell?.enabled)),
+      .setDisabled(reverse(data?.enabled)),
   );
 
   return await interaction.editReply({
     embeds: [embed],
-    components: [channelSelect, statusButton],
+    components: [channelSelect, buttons],
   });
 }

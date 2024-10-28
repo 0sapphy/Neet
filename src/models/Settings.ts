@@ -49,6 +49,20 @@ export class SettingSchema {
     options: MessageOptionSchema;
   };
 
+  static async GetOrCreate(
+    this: ReturnModelType<typeof SettingSchema>, 
+    guildId: string
+  ) {
+    let data; 
+    data = await this.findOne({ guildId });
+    if (!data) {
+      data = await this.create({ guildId });
+      await data.save();
+    }
+
+    return data;
+  }
+
   static async UpdateFarewell(
     this: ReturnModelType<typeof SettingSchema>,
     guildId: string,
