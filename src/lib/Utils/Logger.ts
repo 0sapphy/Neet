@@ -1,5 +1,4 @@
-// @deno-types="npm:@types/signale"
-import signale from "npm:signale";
+import signale from "signale";
 
 export const Bot = new signale.Signale({
 	scope: "BOT",

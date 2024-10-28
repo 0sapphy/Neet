@@ -1,4 +1,4 @@
-import { Client, type ClientOptions, Collection } from "npm:discord.js";
+import { Client, type ClientOptions, Collection } from "discord.js";
 
 export class NeetClient extends Client {
 	public constructor(options: ClientOptions) {
