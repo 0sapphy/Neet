@@ -11,8 +11,10 @@
   "tasks": {
     "fmt": "deno fmt",
     "lint": "deno lint",
-    "start": "deno -A src/index.ts"
+    "start": "deno -A src/index.ts",
+    "cache": "deno cache ./src/index.ts"
   },
+
   "imports": {
     "@std/dotenv": "jsr:@std/dotenv@^0.225.2",
     "@types/signale": "npm:@types/signale@^1.4.7",
