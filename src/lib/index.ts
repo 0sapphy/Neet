@@ -1,2 +1,4 @@
-export * from "./NeetClient.ts";
-export * from "./Utils/Logger.ts"
+/** @format */
+
+export * from "./NeetClient";
+export * from "./Utils/Logger";

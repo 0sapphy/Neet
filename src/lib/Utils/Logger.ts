@@ -1,3 +1,5 @@
+/** @format */
+
 import signale from "signale";
 
 export const Bot = new signale.Signale({
@@ -5,31 +7,29 @@ export const Bot = new signale.Signale({
 
 	config: {
 		displayBadge: true,
-		displayDate: true,
-	},
+		displayDate: true
+	}
 });
 
-export const Debug = new signale.Signale(
-	{
-		scope: "DEBUG",
+export const Debug = new signale.Signale({
+	scope: "DEBUG",
 
-		config: {
-			displayBadge: true,
-			displayDate: true,
-		},
-
-		types: {
-			DiscordJS: {
-				badge: "🤖",
-				label: "DiscordJS",
-				color: "purple",
-			},
-
-			Process: {
-				badge: "💾",
-				label: "Process",
-				color: "yellow",
-			},
-		},
+	config: {
+		displayBadge: true,
+		displayDate: true
 	},
-);
+
+	types: {
+		DiscordJS: {
+			badge: "🤖",
+			label: "DiscordJS",
+			color: "purple"
+		},
+
+		Process: {
+			badge: "💾",
+			label: "Process",
+			color: "yellow"
+		}
+	}
+});

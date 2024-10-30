@@ -1,10 +1,14 @@
-import { Events, Client } from "discord.js";
-import { Bot } from "lib:logger";
+/** @format */
+
+import { Events } from "discord.js";
+import { Bot, NeetClient } from "../../lib";
 
 export default {
-    name: Events.ClientReady,
-    once: true,
-    run: (client: Client) => {
-        Bot.success(`${client.user?.username} is ALIVE and READY.`);
-    }
-}
+	name: Events.ClientReady,
+	once: true,
+	run: async (client: NeetClient) => {
+		Bot.success(`${client.user?.username}, is ready!`);
+
+		//await client.registerCommands();
+	}
+};
