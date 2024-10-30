@@ -1,0 +1,11 @@
+dist
+node_modules
+CHANGELOGS
+NodeJS.d.ts
+CODE_OF_CONDUCT.md
+SECURITY.md
+README.md.github.vscode.gitignore.env
+CONTRIBUTING.md
+LICENSE
+.prettierignore
+.prettierrc.json

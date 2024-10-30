@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json.schemastore.org/prettierrc",
+    "useTabs": true,
+    "printWidth": 120,
+    "tabWidth": 4,
+    "semi": true,
+    "singleQuote": false,
+    "quoteProps": "consistent",
+    "trailingComma": "none",
+    "bracketSpacing": true,
+    "bracketSameLine": true,
+    "arrowParens": "avoid",
+    "parser": "typescript",
+    "insertPragma": true
+}

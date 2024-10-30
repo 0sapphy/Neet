@@ -1,54 +1,32 @@
 {
   "name": "neet",
-  "version": "1.4.1",
-  "description": "Neet, a utility based moderation bot.",
-  "main": "dist/src/bot.js",
+  "version": "2.0.0",
+  "module": "src/index.ts",
+  "type": "commonjs",
   "scripts": {
-    "start": "rm -rf dist && tsc && node .",
-    "dev": "tsc && node .",
-    "dev:emoji": "node dist/scripts/emojis",
-    "test": ""
+    "lint": "eslint ./src/",
+    "pretty": "prettier --write ./src/",
+    "check": "tsc --noEmit",
+    "start": "tsc && node dist/index.js --env-file=.env"
   },
-  "author": "0sapphy",
   "license": "MIT",
-  "dependencies": {
-    "@napi-rs/canvas": "^0.1.56",
-    "@typegoose/typegoose": "^12.8.0",
-    "axios": "^1.7.7",
-    "chalk": "^4.1.0",
-    "discord.js": "^14.16.1",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.45",
-    "mongoose": "^8.7.2",
-    "neet-canvas.js": "^0.0.2",
-    "prompts": "^2.4.2",
-    "qs": "^6.13.0",
-    "signale": "^1.4.0"
-  },
   "devDependencies": {
-    "@eslint/js": "^9.12.0",
-    "@favware/cliff-jumper": "^4.1.0",
-    "@types/prompts": "^2.4.9",
-    "@types/qs": "^6.9.16",
+    "@eslint/js": "^9.13.0",
     "@types/signale": "^1.4.7",
     "eslint": "^9.13.0",
-    "globals": "^15.10.0",
-    "prettier": "^3.3.3",
-    "prettier-eslint": "^16.3.0",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.8.0"
+    "globals": "^15.11.0",
+    "prettier": "3.3.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.12.0",
+    "zod": "^3.23.8"
   },
-  "signale": {
-    "displayScope": true,
-    "displayBadge": true,
-    "displayDate": true,
-    "displayFilename": false,
-    "displayLabel": true,
-    "displayTimestamp": false,
-    "underlineLabel": true,
-    "underlineMessage": false,
-    "underlinePrefix": true,
-    "underlineSuffix": false,
-    "uppercaseLabel": false
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "effect": "^3.10.6",
+    "mongoose": "^8.7.3",
+    "signale": "^1.4.0"
   }
 }

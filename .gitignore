@@ -1,6 +1,3 @@
-.ignore
-__test.ts
-
 # Logs
 logs
 *.log
