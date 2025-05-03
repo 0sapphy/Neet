@@ -1,0 +1,21 @@
+{
+    "format": "report-format",
+    "from": "3-5-2025",
+    "to": "3-6-2025",
+    "written": "Automated, 3 May 2025",
+    "title": "ANU Report - Error Schema",
+    "reports": {
+        "total": 2,
+        "fatal": 1,
+        "details": [
+            { 
+                "index": 1,
+                "space": "client",
+                "title": "Type Error - Event Handler / Testing Phase 1",
+                "shorttened-description": "Unable."
+            }
+        ]
+    },
+
+    "warning": "Reports are not 100%, there can be mistakes."
+}

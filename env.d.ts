@@ -5,5 +5,6 @@ declare namespace NodeJS {
 		TOKEN: string;
 		DATABASE: string;
 		CLIENT_ID: string;
+		DRAWED: string;
 	}
 }

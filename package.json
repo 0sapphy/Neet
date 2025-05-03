@@ -1,15 +1,22 @@
 {
   "name": "neet",
-  "version": "2.0.0",
+  "version": "2.1.7",
   "module": "src/index.ts",
   "type": "commonjs",
   "scripts": {
-    "lint": "eslint ./src/",
-    "pretty": "prettier --write ./src/",
+    "lint": "eslint ./src/ ./lib/",
+    "pretty": "prettier --write ./src/ ./lib/",
     "check": "tsc --noEmit",
-    "start": "tsc && node dist/index.js --env-file=.env"
+    "build": "tsc",
+    "start": "tsc && node dist/src/index.js --env-file=.env"
   },
   "license": "MIT",
+  "exports": {
+    "@/*": "./*",
+    "@/lib/*": "./lib/*",
+    "@/src/*": "./src/*",
+    "@/lib": "./lib/index"
+  },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/signale": "^1.4.7",
@@ -24,8 +31,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "discord.js": "^14.16.3",
-    "effect": "^3.10.6",
+    "ansi-colors": "^4.1.3",
+    "discord.js": "^14.19.3",
     "mongoose": "^8.7.3",
     "signale": "^1.4.0"
   }

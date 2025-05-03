@@ -11,5 +11,5 @@
     "bracketSameLine": true,
     "arrowParens": "avoid",
     "parser": "typescript",
-    "insertPragma": true
+    "insertPragma": false
 }

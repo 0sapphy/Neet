@@ -1,0 +1,18 @@
+{
+    "from": "DAY-MONTH-YEAR",
+    "to": "DAY-MONTH-YEAR",
+    "written": "AUTHOR, WRITTEN_ON",
+    "title": "TITLE",
+    "reports": {
+        "total": "NUMBER",
+        "fatal": "NUMBER",
+        "details": [
+            {
+                "index": "NUMBER",
+                "space": "NAMESPACE",
+                "title": "ERROR_TITLE",
+                "shorttened-description": "DESCRIPTION"
+            }
+        ]
+    }
+}
