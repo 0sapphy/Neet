@@ -1,8 +1,7 @@
 /** @format */
 
-import process from "node:process";
 import fs from "node:fs";
-import { Client, ClientOptions, Collection, GatewayIntentBits } from "discord.js";
+import { Client, ClientOptions, Collection, GatewayIntentBits, RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord.js";
 import { createLogger } from "../";
 import { EventStructure, MessageCommandStructure, SlashCommandStructure } from "./types.client";
 
@@ -22,7 +21,8 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 
 	public commands = {
 		messages: new Collection<string, MessageCommandStructure>(),
-		slash: new Collection<string, SlashCommandStructure>()
+		slash: new Collection<string, SlashCommandStructure>(),
+		data: Array<RESTPostAPIApplicationCommandsJSONBody>()
 	};
 
 	private handleCommands() {
@@ -75,6 +75,7 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 							const command = (await import(`../../src/commands/slash/${k}/${file.replace(".ts", "")}`))
 								.default as SlashCommandStructure;
 							this.commands.slash.set(command.data.name, command);
+							this.commands.data.push(command.data.toJSON())
 							this.logger.client.debug(`Loaded slash-${command.data.name} from slash/${k}/${file}`);
 						}
 					}
@@ -84,6 +85,7 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 					const command = (await import(`../../src/commands/slash/${k.replace(".ts", "")}`))
 						.default as SlashCommandStructure;
 					this.commands.slash.set(command.data.name, command);
+					this.commands.data.push(command.data.toJSON());
 					this.logger.client.debug(`Loaded slash-${command.data.name} from slash/${k}`);
 				}
 			} catch (error) {
@@ -124,10 +126,27 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 		});
 	}
 
+	private deployCommands() {
+		this.logger.client.debug("Attempting to register commands to Discord.");
+
+		try {
+			this.rest.setToken(process.env.TOKEN);
+			
+			this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+				body: this.commands.data
+			});
+
+			this.logger.client.info("Registered commands to Discord.");
+		} catch (error) {
+			this.logger.client.error(error);
+		}
+	}
+
 	public begin() {
 		try {
 			this.handleEvents();
 			this.handleCommands();
+			this.deployCommands();
 
 			this.logger.client.debug("Attempting to login to Discord.");
 
