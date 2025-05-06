@@ -131,13 +131,11 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 
 			const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 			this.commands.slash.forEach((value) => commands.push(value.data.toJSON()));
-			console.log(commands);
 
 			const data = await this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
 				body: commands
 			}) as RESTPutAPIApplicationCommandsResult;
 
-			console.log(data);
 			this.logger.client.info(`Registered ${data.length} commands to Discord.`);
 		} catch (error) {
 			this.logger.client.error(error);
