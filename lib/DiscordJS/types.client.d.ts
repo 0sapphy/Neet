@@ -1,4 +1,4 @@
-import { ClientEvents, Message, PermissionsString, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, ClientEvents, Message, PermissionsString, SlashCommandBuilder } from "discord.js";
 import { Neet } from "./Client";
 
 /** Event structure.  */
@@ -11,7 +11,7 @@ export interface EventStructure<Name extends keyof ClientEvents = void> {
 /** Slash command structure */
 export interface SlashCommandStructure {
 	data: SlashCommandBuilder;
-	run: (context: CommandContext) => void;
+	run: (interaction: ChatInputCommandInteraction, context: CommandContext) => void;
 }
 
 /** Message command related structures. */
@@ -30,11 +30,10 @@ export interface MessageCommandStructure {
 		botAdminOnly?: boolean;
 		permissions?: MessageCommandPermissionsStructure;
 	};
-	run: (context: CommandContext) => void;
+	run: (message: Message, context: CommandContext) => void;
 }
 
 /** General Command Context. */
 export interface CommandContext {
-	message: Message;
-	client: Neet;
+	client: Neet<true>;
 }
