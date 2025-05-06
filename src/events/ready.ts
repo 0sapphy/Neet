@@ -5,6 +5,7 @@ export default {
 	name: "ready",
 	type: "once",
 	run: (client: Neet<true>) => {
+		client.deployCommands();
 		client.logger.client.info("Logged in as " + client.user.username);
 	}
 } as EventStructure<"ready">;

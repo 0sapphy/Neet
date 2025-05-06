@@ -1,7 +1,7 @@
 /** @format */
 
 import fs from "node:fs";
-import { Client, ClientOptions, Collection, GatewayIntentBits, RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord.js";
+import { Client, ClientOptions, Collection, GatewayIntentBits, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPutAPIApplicationCommandsResult, Routes } from "discord.js";
 import { createLogger } from "../";
 import { EventStructure, MessageCommandStructure, SlashCommandStructure } from "./types.client";
 
@@ -21,9 +21,8 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 
 	public commands = {
 		messages: new Collection<string, MessageCommandStructure>(),
-		slash: new Collection<string, SlashCommandStructure>(),
-		data: Array<RESTPostAPIApplicationCommandsJSONBody>()
-	};
+		slash: new Collection<string, SlashCommandStructure>()
+	}
 
 	private handleCommands() {
 		this.logger.client.debug("Attempting to read message command files.");
@@ -75,7 +74,6 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 							const command = (await import(`../../src/commands/slash/${k}/${file.replace(".ts", "")}`))
 								.default as SlashCommandStructure;
 							this.commands.slash.set(command.data.name, command);
-							this.commands.data.push(command.data.toJSON())
 							this.logger.client.debug(`Loaded slash-${command.data.name} from slash/${k}/${file}`);
 						}
 					}
@@ -85,7 +83,6 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 					const command = (await import(`../../src/commands/slash/${k.replace(".ts", "")}`))
 						.default as SlashCommandStructure;
 					this.commands.slash.set(command.data.name, command);
-					this.commands.data.push(command.data.toJSON());
 					this.logger.client.debug(`Loaded slash-${command.data.name} from slash/${k}`);
 				}
 			} catch (error) {
@@ -126,17 +123,22 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 		});
 	}
 
-	private deployCommands() {
+	public async deployCommands() {
 		this.logger.client.debug("Attempting to register commands to Discord.");
 
 		try {
 			this.rest.setToken(process.env.TOKEN);
-			
-			this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
-				body: this.commands.data
-			});
 
-			this.logger.client.info("Registered commands to Discord.");
+			const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+			this.commands.slash.forEach((value) => commands.push(value.data.toJSON()));
+			console.log(commands);
+
+			const data = await this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+				body: commands
+			}) as RESTPutAPIApplicationCommandsResult;
+
+			console.log(data);
+			this.logger.client.info(`Registered ${data.length} commands to Discord.`);
 		} catch (error) {
 			this.logger.client.error(error);
 		}
@@ -146,7 +148,6 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 		try {
 			this.handleEvents();
 			this.handleCommands();
-			this.deployCommands();
 
 			this.logger.client.debug("Attempting to login to Discord.");
 
