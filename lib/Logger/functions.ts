@@ -12,8 +12,10 @@ const logger = createLogger(["system"]);
 
 function getColorForNamespace(namespace: string) {
 	const colors = {
-		system: "redBright",
-		client: "cyanBright"
+		"system": "redBright",
+		"client": "cyanBright",
+		"validator": "redBright",
+		"validator:processenv": "yellowBright"
 	} as any;
 
 	return colors[namespace];
@@ -33,7 +35,7 @@ export function warn(namespace: string, ...args: any[]) {
 		//@ts-expect-error Type Error
 		"[" + ansi[getColorForNamespace(namespace)](namespace) + "]:",
 		ansi.bold.underline("WARN"),
-		inspect(args)
+		args.length < 1 ? args.at(0) : inspect(args, { colors: true })
 	);
 }
 
@@ -42,7 +44,7 @@ export function error(namespace: string, options?: LoggerOptions, ...args: any[]
 		//@ts-expect-error Type Error
 		"[" + ansi[getColorForNamespace(namespace)](namespace) + "]:",
 		ansi.bold.underline("ERROR"),
-		inspect(args, true)
+		inspect(args, { colors: true })
 	);
 
 	if (options) {
@@ -59,7 +61,7 @@ export async function write(namespace: string, path: string | string[], ...args:
 	try {
 		const date = new Date();
 
-		const data = `\n> Error - ${namespace}\n${codeBlock(inspect(args, true))}`;
+		const data = `\n> Error - ${namespace}\n${codeBlock(inspect(args, { colors: true }))}`;
 
 		fs.writeFileSync(`${path}/${date.getDate()}-${date.getHours()}.md`, data);
 	} catch (error) {

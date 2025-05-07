@@ -8,7 +8,7 @@
     "pretty": "prettier --write ./src/ ./lib/",
     "check": "tsc --noEmit",
     "build": "tsc",
-    "start": "tsc && node dist/src/index.js --env-file=.env"
+    "start": "tsc && node dist/src/index.js"
   },
   "license": "MIT",
   "exports": {

@@ -1,8 +1,16 @@
 /** @format */
 
 import fs from "node:fs";
-import { Client, ClientOptions, Collection, GatewayIntentBits, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPutAPIApplicationCommandsResult, Routes } from "discord.js";
-import { createLogger } from "../";
+import {
+	Client,
+	ClientOptions,
+	Collection,
+	GatewayIntentBits,
+	RESTPostAPIChatInputApplicationCommandsJSONBody,
+	RESTPutAPIApplicationCommandsResult,
+	Routes
+} from "discord.js";
+import { createLogger, Validator } from "../";
 import { EventStructure, MessageCommandStructure, SlashCommandStructure } from "./types.client";
 
 export class Neet<Ready extends boolean = false> extends Client<Ready> {
@@ -10,19 +18,21 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 		errors: { save: "./errors/" }
 	});
 
+	public validator = new Validator();
+
 	public constructor(options?: ClientOptions) {
 		super({
 			...options,
 			intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
 		});
 
-		process.loadEnvFile(".env");
+		this.validator.parseEnv();
 	}
 
 	public commands = {
 		messages: new Collection<string, MessageCommandStructure>(),
 		slash: new Collection<string, SlashCommandStructure>()
-	}
+	};
 
 	private handleCommands() {
 		this.logger.client.debug("Attempting to read message command files.");
@@ -130,11 +140,11 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 			this.rest.setToken(process.env.TOKEN);
 
 			const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
-			this.commands.slash.forEach((value) => commands.push(value.data.toJSON()));
+			this.commands.slash.forEach(value => commands.push(value.data.toJSON()));
 
-			const data = await this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+			const data = (await this.rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
 				body: commands
-			}) as RESTPutAPIApplicationCommandsResult;
+			})) as RESTPutAPIApplicationCommandsResult;
 
 			this.logger.client.info(`Registered ${data.length} commands to Discord.`);
 		} catch (error) {
