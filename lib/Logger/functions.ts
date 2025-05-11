@@ -14,6 +14,7 @@ function getColorForNamespace(namespace: string) {
 	const colors = {
 		"system": "redBright",
 		"client": "cyanBright",
+		"mongodb": "greenBright",
 		"validator": "redBright",
 		"validator:processenv": "yellowBright"
 	} as any;

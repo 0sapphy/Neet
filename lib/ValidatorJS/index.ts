@@ -8,7 +8,7 @@ export class Validator extends EventEmitter {
 
 	public constructor() {
 		super({ captureRejections: true });
-		logger["validator"].warn("Validator running...");
+		logger["validator"].info("Validator running...");
 
 		this.on("complete", (completed: boolean, params: [], err?: { failedAt: string; exit: boolean }) => {
 			if (!completed) {
@@ -29,8 +29,8 @@ export class Validator extends EventEmitter {
 		});
 	}
 
-	public parseEnv() {
-		const result = ValidateProcessEnv();
+	public async parseEnv() {
+		const result = await ValidateProcessEnv();
 		this.emit("complete", result.completed, [1, "env"], { failedAt: result.failedAt, exit: result.exit });
 	}
 }
