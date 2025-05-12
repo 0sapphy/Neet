@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
 import { ValidateProcessEnv } from "./ProcessEnv";
-import { logger } from "./utils";
+import { logger } from "../";
 
 export class Validator extends EventEmitter {
 	public validators = 1;
@@ -8,13 +8,10 @@ export class Validator extends EventEmitter {
 
 	public constructor() {
 		super({ captureRejections: true });
-		logger["validator"].info("Validator running...");
 
 		this.on("complete", (completed: boolean, params: [], err?: { failedAt: string; exit: boolean }) => {
 			if (!completed) {
-				logger.validator[err?.exit ? "error" : "warn"](
-					`Failed validation check at ${params.at(1)} >> ${err?.failedAt}`
-				);
+				logger[err?.exit ? "fatal" : "warn"](`Failed validation check at ${params.at(1)} >> ${err?.failedAt}`);
 				if (err?.exit) process.exit(1);
 				return;
 			}
@@ -22,9 +19,9 @@ export class Validator extends EventEmitter {
 			this.completed = params.at(0)!;
 
 			if (this.validators === this.completed) {
-				logger.validator.info("Completed all the validators without major issues.");
+				logger.success("Completed all the validators without major issues.");
 			} else {
-				logger.validator.info(`Completed ${params.at(1)} validator without major issues.`);
+				logger.success(`Completed ${params.at(1)} validator without major issues.`);
 			}
 		});
 	}

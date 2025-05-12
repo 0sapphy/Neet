@@ -1,17 +1,16 @@
 import { Mongoose } from "mongoose";
-import { createLogger } from "../../lib";
+import { logger } from "../../lib";
 
 export default {
-    logger: createLogger(["mongodb"]),
-    async connect() {
-        const mongoose = new Mongoose();
+	async connect() {
+		const mongoose = new Mongoose();
 
-        this.logger.mongodb.info("Attempting to connect to mongodb...");
+		logger.debug("Attempting to connect to mongodb...");
 
-        mongoose.connect(process.env.DATABASE, { 
-            dbName: process.env.NODE_ENV === "production" ? "Production" : "Development"
-        });
+		mongoose.connect(process.env.DATABASE, {
+			dbName: process.env.NODE_ENV === "production" ? "Production" : "Development"
+		});
 
-        this.logger.mongodb.info("Connected to mongodb.");
-    }
-}
+		logger.ready("Connected to mongodb.");
+	}
+};

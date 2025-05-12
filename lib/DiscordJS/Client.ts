@@ -10,14 +10,11 @@ import {
 	RESTPutAPIApplicationCommandsResult,
 	Routes
 } from "discord.js";
-import { createLogger, Validator } from "../";
+import { logger, Validator } from "../";
 import { EventStructure, MessageCommandStructure, SlashCommandStructure } from "./types.client";
 
 export class Neet<Ready extends boolean = false> extends Client<Ready> {
-	public logger = createLogger(["client", "system"], {
-		errors: { save: "./errors/" }
-	});
-
+	public logger = logger;
 	public validator = new Validator();
 
 	public constructor(options?: ClientOptions) {
@@ -35,7 +32,7 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 	};
 
 	private handleCommands() {
-		this.logger.client.debug("Attempting to read message command files.");
+		this.logger.debug("Attempting to read message command files.");
 
 		// Read the messages folder.
 		fs.readdirSync("./src/commands/message/").forEach(async k => {
@@ -52,7 +49,7 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 							const command = (await import(`../../src/commands/message/${k}/${file.replace(".ts", "")}`))
 								.default as MessageCommandStructure;
 							this.commands.messages.set(command.name, command);
-							this.logger.client.debug(`Loaded message-${command.name} from message/${k}/${file}`);
+							this.logger.debug(`Loaded message-${command.name} from message/${k}/${file}`);
 						}
 					}
 				}
@@ -61,21 +58,21 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 					const command = (await import(`../../src/commands/message/${k.replace(".ts", "")}`))
 						.default as MessageCommandStructure;
 					this.commands.messages.set(command.name, command);
-					this.logger.client.debug(`Loaded message-${command.name} from message/${k}`);
+					this.logger.debug(`Loaded message-${command.name} from message/${k}`);
 				}
 			} catch (error) {
-				this.logger.client.error(error);
+				this.logger.error("Commands", error);
 			}
 		});
 
-		this.logger.client.debug("Attempting to read slash command files.");
+		this.logger.debug("Attempting to read slash command files.");
 
 		fs.readdirSync("./src/commands/slash/").forEach(async k => {
 			try {
 				const stat = fs.statSync(`./src/commands/slash/${k}`);
 
 				if (stat.isDirectory()) {
-					const files = fs.readdirSync(`./src/commands/slash/${k}/`);
+					const files = fs.readdirSync(`./src/commands/slash/${k}/`).filter(v => v === "sub");
 
 					for (const file of files) {
 						const FIF = fs.statSync(`./src/commands/slash/${k}/${file}`);
@@ -84,7 +81,7 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 							const command = (await import(`../../src/commands/slash/${k}/${file.replace(".ts", "")}`))
 								.default as SlashCommandStructure;
 							this.commands.slash.set(command.data.name, command);
-							this.logger.client.debug(`Loaded slash-${command.data.name} from slash/${k}/${file}`);
+							this.logger.debug(`Loaded slash-${command.data.name} from slash/${k}/${file}`);
 						}
 					}
 				}
@@ -93,48 +90,48 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 					const command = (await import(`../../src/commands/slash/${k.replace(".ts", "")}`))
 						.default as SlashCommandStructure;
 					this.commands.slash.set(command.data.name, command);
-					this.logger.client.debug(`Loaded slash-${command.data.name} from slash/${k}`);
+					this.logger.debug(`Loaded slash-${command.data.name} from slash/${k}`);
 				}
 			} catch (error) {
-				this.logger.client.error(error);
+				this.logger.error(error);
 			}
 		});
 	}
 
 	private handleEvents() {
-		this.logger.client.debug("Attempting to read event files.");
+		this.logger.debug("Attempting to read event files.");
 
 		fs.readdirSync("./src/events/").forEach(async k => {
 			try {
-				this.logger.client.debug(`Checking type of ${k}`);
+				this.logger.debug(`Checking type of ${k}`);
 				const stat = fs.statSync(`./src/events/${k}`);
 
 				if (stat.isDirectory()) {
-					this.logger.client.debug(`Loading ./src/events/${k}/*`);
+					this.logger.debug(`Loading ./src/events/${k}/*`);
 
 					const files = fs.readdirSync(`./src/events/${k}/`);
 
 					for (const file of files) {
 						const event = (await import(`../../src/events/${k}/${file.replace(".ts", "")}`))
 							.default as EventStructure;
-						this.logger.client.debug(`Loading /${k}/${file} | ${stat.size.toString()}`);
+						this.logger.debug(`Loading /${k}/${file} | ${stat.size.toString()}`);
 						this[event.type](event.name, (...args) => event.run(...args));
 					}
 				}
 
 				if (stat.isFile()) {
 					const event = (await import(`../../src/events/${k.replace(".ts", "")}`)).default as EventStructure;
-					this.logger.client.debug(`Loaded ${k} | ${stat.size.toString()}`);
+					this.logger.debug(`Loaded ${k} | ${stat.size.toString()}`);
 					this[event.type](event.name, (...args) => event.run(...args));
 				}
 			} catch (error) {
-				this.logger.client.error(error);
+				this.logger.error(error);
 			}
 		});
 	}
 
 	public async deployCommands() {
-		this.logger.client.debug("Attempting to register commands to Discord.");
+		this.logger.debug("Attempting to register commands to Discord.");
 
 		try {
 			this.rest.setToken(process.env.TOKEN);
@@ -146,9 +143,9 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 				body: commands
 			})) as RESTPutAPIApplicationCommandsResult;
 
-			this.logger.client.info(`Registered ${data.length} commands to Discord.`);
+			this.logger.info(`Registered ${data.length} commands to Discord.`);
 		} catch (error) {
-			this.logger.client.error(error);
+			this.logger.error(error);
 		}
 	}
 
@@ -157,13 +154,13 @@ export class Neet<Ready extends boolean = false> extends Client<Ready> {
 			this.handleEvents();
 			this.handleCommands();
 
-			this.logger.client.debug("Attempting to login to Discord.");
+			this.logger.debug("Attempting to login to Discord.");
 
 			this.login(process.env.TOKEN);
 
-			this.logger.client.info(`Logged in`);
+			this.logger.info(`Logged in`);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 		}
 	}
 }
